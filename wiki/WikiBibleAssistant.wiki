@@ -1,0 +1,11 @@
+#summary One-sentence summary of this page.
+#labels Bible,Android
+
+= Introduction =
+
+Bible Assistant is launched.
+God bless us!
+
+= Details =
+
+To be the best assistant for Bible.
