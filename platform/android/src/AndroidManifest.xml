@@ -27,7 +27,7 @@
         </activity>
 
 		<provider android:name="org.heavenus.bible.provider.BibleProvider"
-			android:authorities="org.heavenus.bibleprovider"
+			android:authorities="org.heavenus.bible"
 			/>
 
     </application>
