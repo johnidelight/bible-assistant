@@ -173,17 +173,38 @@ public class BibleProvider extends ContentProvider {
 			
 			// Find all available locale databases.
 			String pathPattern = new StringBuilder(c.getFilesDir().getParent()).append(DATABASE_PATH).toString();
-			String[] locales = Locale.getISOLanguages(); // FIXME: need use locale instead
-			for(String locale : locales) {
-				String path = pathPattern.replace("*", locale);
+			Locale[] locales = Locale.getAvailableLocales();
+			for(Locale locale : locales) {
+				String localeName = getLocaleName(locale);
+				String path = pathPattern.replace("*", localeName);
 				File f = new File(path);
 				if(f.exists()) {
-					mDatabases.put(locale, path);
+					mDatabases.put(localeName, path);
 				}
 			}
 		}
 		
 		return mDatabases;
+	}
+
+	private static String getLocaleName(Locale locale) {
+		if(locale == null) return null;
+
+		String localeName = "";
+		
+		// <language>_<country>
+		// Ignore uncommon variant code.
+		String language = locale.getLanguage();
+		if(language != null && !"".equals(language)) {
+			String country = locale.getCountry();
+			if(country != null && !"".equals(country)) {
+				localeName = new StringBuilder(language).append('_').append(country).toString();
+			} else {
+				localeName = language;
+			}
+		}
+
+		return localeName;
 	}
 
 	private SQLiteDatabase getDatabaseForUri(Uri uri) {
