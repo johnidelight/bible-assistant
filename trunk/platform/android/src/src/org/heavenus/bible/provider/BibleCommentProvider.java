@@ -25,8 +25,8 @@ public class BibleCommentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI = Uri.parse(new StringBuilder(
 			ContentResolver.SCHEME_CONTENT).append("://").append(AUTHORITY).toString());
 
-	private static final int URI_SEGMENT_INDEX_BOOK = 1;
-	private static final int URI_SEGMENT_INDEX_SECTION = 2;
+	private static final int URI_SEGMENT_INDEX_BOOK = 0;
+	private static final int URI_SEGMENT_INDEX_SECTION = 1;
 
 	private static final int MATCH_BOOK = 1;
 	private static final int MATCH_SECTION = 2;
@@ -232,7 +232,7 @@ public class BibleCommentProvider extends ContentProvider {
 	}
 
 	private class DatabaseHelper extends SQLiteOpenHelper {
-		private static final int DATABASE_VERSION = 0;
+		private static final int DATABASE_VERSION = 1;
 		
 		public DatabaseHelper(Context context, String name) {
 			super(context, name, null, DATABASE_VERSION);

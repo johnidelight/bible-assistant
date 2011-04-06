@@ -1,8 +1,12 @@
 package org.heavenus.bible.provider;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
-class BibleStore {
+public class BibleStore {
+	public static final Uri BIBLE_CONTENT_URI = BibleProvider.CONTENT_URI;
+	public static final Uri BIBLE_COMMENT_URI = BibleCommentProvider.CONTENT_URI;
+	
 	public static final class LocaleColumns implements BaseColumns {
 		/* The bible locale name.
 		 * Type: TEXT
