@@ -29,6 +29,10 @@
 		<provider android:name="org.heavenus.bible.provider.BibleProvider"
 			android:authorities="org.heavenus.bible"
 			/>
+			
+		<provider android:name="org.heavenus.bible.provider.BibleCommentProvider"
+			android:authorities="org.heavenus.bible.comment"
+			/>
 
     </application>
 

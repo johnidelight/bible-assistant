@@ -45,4 +45,16 @@ class BibleStore {
 		 */
 		public static final String CONTENT = "content";
 	}
+	
+	public static final class BookCommentColumns implements BaseColumns {
+		/* The section name.
+		 * Type: TEXT
+		 */
+		public static final String SECTION = "section";
+		
+		/* The comment of the section.
+		 * Type: TEXT
+		 */
+		public static final String COMMENT = "comment";
+	}
 }

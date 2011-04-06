@@ -112,7 +112,7 @@ public class BibleProvider extends ContentProvider {
 
         // Build sql script.
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-		switch(URI_MATCHER.match(uri)) {
+		switch(matchCode) {
 		case MATCH_LOCALE:
 			builder.setTables(TABLE_CATEGORY);
 			break;
