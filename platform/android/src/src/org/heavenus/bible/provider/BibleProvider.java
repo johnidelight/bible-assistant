@@ -32,10 +32,10 @@ public class BibleProvider extends ContentProvider {
 	public static final Uri CONTENT_URI = Uri.parse(new StringBuilder(
 			ContentResolver.SCHEME_CONTENT).append("://").append(AUTHORITY).toString());
 
-	private static final int URI_SEGMENT_INDEX_LOCALE = 1;
-	private static final int URI_SEGMENT_INDEX_CATEGORY = 2;
-	private static final int URI_SEGMENT_INDEX_BOOK = 3;
-	private static final int URI_SEGMENT_INDEX_SECTION = 4;
+	private static final int URI_SEGMENT_INDEX_LOCALE = 0;
+	private static final int URI_SEGMENT_INDEX_CATEGORY = 1;
+	private static final int URI_SEGMENT_INDEX_BOOK = 2;
+	private static final int URI_SEGMENT_INDEX_SECTION = 3;
 
 	private static final int MATCH_LOCALES = 1;
 	private static final int MATCH_LOCALE = 2;
@@ -175,7 +175,7 @@ public class BibleProvider extends ContentProvider {
 			String pathPattern = new StringBuilder(c.getFilesDir().getParent()).append(DATABASE_PATH).toString();
 			Locale[] locales = Locale.getAvailableLocales();
 			for(Locale locale : locales) {
-				String localeName = getLocaleName(locale);
+				String localeName = locale.toString();
 				String path = pathPattern.replace("*", localeName);
 				File f = new File(path);
 				if(f.exists()) {
@@ -185,26 +185,6 @@ public class BibleProvider extends ContentProvider {
 		}
 		
 		return mDatabases;
-	}
-
-	private static String getLocaleName(Locale locale) {
-		if(locale == null) return null;
-
-		String localeName = "";
-		
-		// <language>_<country>
-		// Ignore uncommon variant code.
-		String language = locale.getLanguage();
-		if(language != null && !"".equals(language)) {
-			String country = locale.getCountry();
-			if(country != null && !"".equals(country)) {
-				localeName = new StringBuilder(language).append('_').append(country).toString();
-			} else {
-				localeName = language;
-			}
-		}
-
-		return localeName;
 	}
 
 	private SQLiteDatabase getDatabaseForUri(Uri uri) {
