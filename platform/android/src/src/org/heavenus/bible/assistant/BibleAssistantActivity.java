@@ -7,17 +7,20 @@ import java.util.Locale;
 import org.heavenus.bible.provider.BibleStore;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class BibleAssistantActivity extends Activity {
 	private class BookCategory {
-		public long id;
 		public String title;
+		public Uri uri;
 	}
 	
     @Override
@@ -33,10 +36,18 @@ public class BibleAssistantActivity extends Activity {
         if(cats != null) {
         	LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
         			LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        	for(BookCategory cat : cats) {
+        	for(final BookCategory cat : cats) {
         		Button btn = new Button(this);
         		btn.setText(cat.title);
-        		btn.setTag(cat.id);
+        		btn.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// Show books in specific category.
+						Intent it = new Intent(Intent.ACTION_VIEW, cat.uri,
+								BibleAssistantActivity.this, BookActivity.class);
+						startActivity(it);
+					}
+				});
 
         		rootLayout.addView(btn, lp);
         	}
@@ -54,12 +65,15 @@ public class BibleAssistantActivity extends Activity {
     		if(cursor.moveToFirst()) {
     			do {
     				BookCategory cat = new BookCategory();
-    				cat.id = cursor.getLong(cursor.getColumnIndex(BibleStore.CategoryColumns._ID));
     				cat.title = cursor.getString(cursor.getColumnIndex(BibleStore.CategoryColumns.TITLE));
+    				long id = cursor.getLong(cursor.getColumnIndex(BibleStore.CategoryColumns._ID));
+    				cat.uri = ContentUris.withAppendedId(uri, id);
 
     				cats.add(cat);
     			} while(cursor.moveToNext());
     		}
+    		
+    		cursor.close();
     	}
     	
     	return cats;
