@@ -28,14 +28,14 @@ import android.net.Uri;
  *		content://org.heavenus.bible/zh_CN/2/book_jesus/2.11
  */
 public class BibleProvider extends ContentProvider {
-	public static final String AUTHORITY = "org.heavenus.bible";
-	public static final Uri CONTENT_URI = Uri.parse(new StringBuilder(
+	static final String AUTHORITY = "org.heavenus.bible";
+	static final Uri CONTENT_URI = Uri.parse(new StringBuilder(
 			ContentResolver.SCHEME_CONTENT).append("://").append(AUTHORITY).toString());
 
-	private static final int URI_SEGMENT_INDEX_LOCALE = 0;
-	private static final int URI_SEGMENT_INDEX_CATEGORY = 1;
-	private static final int URI_SEGMENT_INDEX_BOOK = 2;
-	private static final int URI_SEGMENT_INDEX_SECTION = 3;
+	static final int URI_SEGMENT_INDEX_LOCALE = 0;
+	static final int URI_SEGMENT_INDEX_CATEGORY = 1;
+	static final int URI_SEGMENT_INDEX_BOOK = 2;
+	static final int URI_SEGMENT_INDEX_SECTION = 3;
 
 	private static final int MATCH_LOCALES = 1;
 	private static final int MATCH_LOCALE = 2;
@@ -118,10 +118,10 @@ public class BibleProvider extends ContentProvider {
 			break;
 		case MATCH_CATEGORY:
 			{
-				String category = uri.getPathSegments().get(URI_SEGMENT_INDEX_CATEGORY);
+				String categoryId = uri.getPathSegments().get(URI_SEGMENT_INDEX_CATEGORY);
 				builder.setTables(TABLE_BOOK);
 				builder.appendWhere(new StringBuilder(
-						BibleStore.BookColumns.CATEGORY_ID).append('=').append(category).toString());
+						BibleStore.BookColumns.CATEGORY_ID).append('=').append(categoryId).toString());
 			}
 			break;
 		case MATCH_BOOK:
@@ -133,10 +133,10 @@ public class BibleProvider extends ContentProvider {
 		case MATCH_SECTION:
 			{
 				String bookName = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK);
-				String section = uri.getPathSegments().get(URI_SEGMENT_INDEX_SECTION);
+				String sectionName = uri.getPathSegments().get(URI_SEGMENT_INDEX_SECTION);
 				builder.setTables(bookName); // Book name is the table name.
 				builder.appendWhere(new StringBuilder(
-						BibleStore.BookContentColumns.SECTION).append('=').append(section).toString());
+						BibleStore.BookContentColumns.SECTION).append("=\'").append(sectionName).append('\'').toString());
 			}
 			break;
 		default:

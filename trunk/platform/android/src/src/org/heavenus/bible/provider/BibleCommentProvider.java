@@ -21,12 +21,12 @@ import android.text.TextUtils;
  *		content://org.heavenus.bible.comment/book_jesus/2.11
  */
 public class BibleCommentProvider extends ContentProvider {
-	public static final String AUTHORITY = "org.heavenus.bible.comment";
-	public static final Uri CONTENT_URI = Uri.parse(new StringBuilder(
+	static final String AUTHORITY = "org.heavenus.bible.comment";
+	static final Uri CONTENT_URI = Uri.parse(new StringBuilder(
 			ContentResolver.SCHEME_CONTENT).append("://").append(AUTHORITY).toString());
 
-	private static final int URI_SEGMENT_INDEX_BOOK = 0;
-	private static final int URI_SEGMENT_INDEX_SECTION = 1;
+	static final int URI_SEGMENT_INDEX_BOOK = 0;
+	static final int URI_SEGMENT_INDEX_SECTION = 1;
 
 	private static final int MATCH_BOOK = 1;
 	private static final int MATCH_SECTION = 2;
@@ -77,6 +77,11 @@ public class BibleCommentProvider extends ContentProvider {
 			{
 				String bookName = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK);
 				builder.setTables(bookName); // Book name is the table name.
+
+				// FIXME: it is not necessary to ensure book table exist here.
+				synchronized(mDbHelper) {
+					ensureBookTable(db, bookName);
+				}
 			}
 			break;
 		case MATCH_SECTION:
@@ -85,7 +90,12 @@ public class BibleCommentProvider extends ContentProvider {
 				String section = uri.getPathSegments().get(URI_SEGMENT_INDEX_SECTION);
 				builder.setTables(bookName); // Book name is the table name.
 				builder.appendWhere(new StringBuilder(
-						BibleStore.BookCommentColumns.SECTION).append('=').append(section).toString());
+						BibleStore.BookCommentColumns.SECTION).append("=\'").append(section).append('\'').toString());
+				
+				// FIXME: it is not necessary to ensure book table exist here.
+				synchronized(mDbHelper) {
+					ensureBookTable(db, bookName);
+				}
 			}
 			break;
 		default:
@@ -133,6 +143,7 @@ public class BibleCommentProvider extends ContentProvider {
 		int count = 0;
 		if(table != null) {
 			synchronized(mDbHelper) {
+				ensureBookTable(db, table);
 				count = db.update(table, values, where, selectionArgs);
 			}
 			if (count > 0) {
@@ -165,7 +176,6 @@ public class BibleCommentProvider extends ContentProvider {
 		String table = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK); // Book name is the table name.
 		long rowId = -1;
 		synchronized(mDbHelper) {
-			// Create book table if not exists, then insert new row.
 			ensureBookTable(db, table);
 			rowId = db.insert(table, null, values);
 		}
@@ -211,6 +221,7 @@ public class BibleCommentProvider extends ContentProvider {
 		int count = 0;
 		if(table != null) {
 			synchronized(mDbHelper) {
+				ensureBookTable(db, table);
 				count = db.delete(table, where, selectionArgs);
 			}
 			if (count > 0) {

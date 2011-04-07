@@ -1,35 +1,96 @@
 package org.heavenus.bible.assistant;
 
-import android.app.ListActivity;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.heavenus.bible.provider.BibleStore;
+
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-public class BookContentActivity extends ListActivity implements ListView.OnItemClickListener {
+public class BookContentActivity extends Activity implements ListView.OnItemClickListener {
+	private ListView mSectionListView;
+	
+	private class Section {
+		public String name;
+		public String content;
+	}
+	private Uri mBookUri;
+	private List<Section> mSections;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        setContentView(R.layout.book_content);
+        mSectionListView = (ListView) findViewById(R.id.section_list);
+        
+        mBookUri = getBookUri();
+        
+        // Get current book content.
+        mSections = getBookSections(this, mBookUri);
+		if(mSections != null) {
+			List<String> contents = new ArrayList<String>();
+			for(Section s : mSections) {
+				contents.add(new StringBuilder(s.name).append(' ').append(s.content).toString());
+			}
+			mSectionListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contents));
 
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sContents));
-        getListView().setOnItemClickListener(this);
+			mSectionListView.setOnItemClickListener(this);
+		}
     }
-    
-    private static final String[] sContents = new String[] {
-    	"1.1t", "1.1", "1.2", "1.3", "1.4", "2.1", "2.2"
-    };
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO: id -> sectonId
-		String sectionId = ((TextView) view).getText().toString();
+		// Generate comment uri for current section.
+		Uri commentUri = Uri.withAppendedPath(BibleStore.BIBLE_COMMENT_CONTENT_URI, BibleStore.getBookName(mBookUri));
+		commentUri = Uri.withAppendedPath(commentUri, mSections.get(position).name);
 		
-		// Show comment.
-		Intent it = new Intent(Intent.ACTION_VIEW, null, this, CommentActivity.class);
-		it.putExtra(CommentActivity.EXTRA_SECTION_ID, sectionId);
+		// Show current section comment.
+		Intent it = new Intent(Intent.ACTION_VIEW, commentUri, this, CommentActivity.class);
 		startActivity(it);
+	}
+	
+	private Uri getBookUri() {
+		Uri uri = null;
+
+		Intent it = getIntent();
+		if(Intent.ACTION_VIEW.equals(it.getAction())) {
+			uri = it.getData();
+		}
+
+		return uri;
+	}
+	
+	private List<Section> getBookSections(Context c, Uri bookUri) {
+		if(bookUri == null) return null;
+
+		List<Section> sections = new ArrayList<Section>();
+
+    	String[] projection = new String[]{BibleStore.BookContentColumns.SECTION, BibleStore.BookContentColumns.CONTENT};
+    	Cursor cursor = c.getContentResolver().query(bookUri, projection, null, null, null);
+    	if(cursor != null) {
+    		if(cursor.moveToFirst()) {
+    			do {
+    				Section s = new Section();
+    				s.name = cursor.getString(cursor.getColumnIndex(BibleStore.BookContentColumns.SECTION));
+    				s.content = cursor.getString(cursor.getColumnIndex(BibleStore.BookContentColumns.CONTENT));
+
+    				sections.add(s);
+    			} while(cursor.moveToNext());
+    		}
+    		
+    		cursor.close();
+    	}
+		
+		return sections;
 	}
 }

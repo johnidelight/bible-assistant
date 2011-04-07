@@ -1,12 +1,14 @@
 package org.heavenus.bible.provider;
 
+import java.util.List;
+
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class BibleStore {
 	public static final Uri BIBLE_CONTENT_URI = BibleProvider.CONTENT_URI;
-	public static final Uri BIBLE_COMMENT_URI = BibleCommentProvider.CONTENT_URI;
-	
+	public static final Uri BIBLE_COMMENT_CONTENT_URI = BibleCommentProvider.CONTENT_URI;
+
 	public static final class LocaleColumns implements BaseColumns {
 		/* The bible locale name.
 		 * Type: TEXT
@@ -60,5 +62,47 @@ public class BibleStore {
 		 * Type: TEXT
 		 */
 		public static final String COMMENT = "comment";
+	}
+	
+	public static String getBookName(Uri uri) {
+		if(uri == null) return null;
+		
+		String bookName = null;
+		
+		String authority = uri.getAuthority();
+		if(BibleProvider.AUTHORITY.equals(authority)) {
+			List<String> segs = uri.getPathSegments();
+			if(segs.size() > BibleProvider.URI_SEGMENT_INDEX_BOOK) {
+				bookName = segs.get(BibleProvider.URI_SEGMENT_INDEX_BOOK);
+			}
+		} else if(BibleCommentProvider.AUTHORITY.equals(authority)) {
+			List<String> segs = uri.getPathSegments();
+			if(segs.size() > BibleCommentProvider.URI_SEGMENT_INDEX_BOOK) {
+				bookName = segs.get(BibleCommentProvider.URI_SEGMENT_INDEX_BOOK);
+			}
+		}
+		
+		return bookName;
+	}
+	
+	public static String getSectionName(Uri uri) {
+		if(uri == null) return null;
+		
+		String sectionName = null;
+		
+		String authority = uri.getAuthority();
+		if(BibleProvider.AUTHORITY.equals(authority)) {
+			List<String> segs = uri.getPathSegments();
+			if(segs.size() > BibleProvider.URI_SEGMENT_INDEX_BOOK) {
+				sectionName = segs.get(BibleProvider.URI_SEGMENT_INDEX_SECTION);
+			}
+		} else if(BibleCommentProvider.AUTHORITY.equals(authority)) {
+			List<String> segs = uri.getPathSegments();
+			if(segs.size() > BibleCommentProvider.URI_SEGMENT_INDEX_BOOK) {
+				sectionName = segs.get(BibleCommentProvider.URI_SEGMENT_INDEX_SECTION);
+			}
+		}
+		
+		return sectionName;
 	}
 }
