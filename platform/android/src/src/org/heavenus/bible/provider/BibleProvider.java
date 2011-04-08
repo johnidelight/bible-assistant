@@ -21,14 +21,23 @@ import android.net.Uri;
 
 /* Bible content provider
  * 
- * Content Uri format:
+ *	Content Uri format:
  *		content://<authority>/<locale_name>/<category_id>/<book_name>/<section_name>
- *	For example:
- *		content://org.heavenus.bible/en_US/1/book_god/1.1
- *		content://org.heavenus.bible/zh_CN/2/book_jesus/2.11
+ *		For example:
+ *			content://org.heavenus.bible/en_US/1/book_god/1.1
+ *			content://org.heavenus.bible/zh_CN/2/book_jesus/2.11
+ * 
+ *	Section name format:
+ * 		(1)General section: <chapter_number(>0)>.<section_number(>0)>
+ * 			eg: 2.3
+ * 		(2)Chapter title: <chapter_number(>0)>.0t
+ * 			eg: 1.0t
+ * 		(3)Chapter section title: <chapter_number(>0)>.<section_number(>0)>t
+ * 			eg: 2.3t
  */
 public class BibleProvider extends ContentProvider {
 	static final String AUTHORITY = "org.heavenus.bible";
+	static final String MIMETYPE_BASE = "vnd.heavenus.bible";
 	static final Uri CONTENT_URI = Uri.parse(new StringBuilder(
 			ContentResolver.SCHEME_CONTENT).append("://").append(AUTHORITY).toString());
 
@@ -37,13 +46,13 @@ public class BibleProvider extends ContentProvider {
 	static final int URI_SEGMENT_INDEX_BOOK = 2;
 	static final int URI_SEGMENT_INDEX_SECTION = 3;
 
-	private static final int MATCH_LOCALES = 1;
+	private static final int MATCH_ROOT = 1;
 	private static final int MATCH_LOCALE = 2;
 	private static final int MATCH_CATEGORY = 3;
 	private static final int MATCH_BOOK = 4;
 	private static final int MATCH_SECTION = 5;
 
-	private static final UriMatcher URI_MATCHER = new UriMatcher(MATCH_LOCALES);
+	private static final UriMatcher URI_MATCHER = new UriMatcher(MATCH_ROOT);
 	static {
 		URI_MATCHER.addURI(AUTHORITY, "*", MATCH_LOCALE);
 		URI_MATCHER.addURI(AUTHORITY, "*/#", MATCH_CATEGORY);
@@ -62,20 +71,25 @@ public class BibleProvider extends ContentProvider {
 		String mimeType = null;
 
 		switch(URI_MATCHER.match(uri)) {
-		case MATCH_LOCALES:
-			mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/locale";
+		case MATCH_ROOT:
+			mimeType = new StringBuilder(ContentResolver.CURSOR_DIR_BASE_TYPE)
+					.append('/').append(MIMETYPE_BASE).append(".locale").toString();
 			break;
 		case MATCH_LOCALE:
-			mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/category";
+			mimeType = new StringBuilder(ContentResolver.CURSOR_DIR_BASE_TYPE)
+					.append('/').append(MIMETYPE_BASE).append(".category").toString();
 			break;
 		case MATCH_CATEGORY:
-			mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/book";
+			mimeType = new StringBuilder(ContentResolver.CURSOR_DIR_BASE_TYPE)
+					.append('/').append(MIMETYPE_BASE).append(".book").toString();
 			break;
 		case MATCH_BOOK:
-			mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/section";
+			mimeType = new StringBuilder(ContentResolver.CURSOR_DIR_BASE_TYPE)
+					.append('/').append(MIMETYPE_BASE).append(".section").toString();
 			break;
 		case MATCH_SECTION:
-			mimeType = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/section";
+			mimeType = new StringBuilder(ContentResolver.CURSOR_ITEM_BASE_TYPE)
+					.append('/').append(MIMETYPE_BASE).append(".section").toString();
 			break;
 		default:
 			break;
@@ -92,7 +106,7 @@ public class BibleProvider extends ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         int matchCode = URI_MATCHER.match(uri);
-        if(matchCode == MATCH_LOCALES) {
+        if(matchCode == MATCH_ROOT) {
         	// Get all available locales.
         	MatrixCursor c = new MatrixCursor(new String[]{BibleStore.LocaleColumns._ID, BibleStore.LocaleColumns.LOCALE});
         	Set<String> locales = getDatabases(getContext()).keySet();

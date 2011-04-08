@@ -33,7 +33,7 @@ public class BookListActivity extends Activity implements AdapterView.OnItemClic
         setContentView(R.layout.book_list);
         mBookListView = (ListView) findViewById(R.id.book_list);
 
-        mCategoryUri = getCategoryUri();
+        initFromIntent();
         
         // Get all books in current category.
         mBooks = getBooks(this, mCategoryUri);
@@ -51,23 +51,20 @@ public class BookListActivity extends Activity implements AdapterView.OnItemClic
     @Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		// Generate current book uri.
-		String bookName = mBooks.get(position).name;
-		Uri bookUri = Uri.withAppendedPath(mCategoryUri, bookName);
+    	Book book = mBooks.get(position);
+		Uri bookUri = Uri.withAppendedPath(mCategoryUri, book.name);
 		
 		// Show current book content.
 		Intent it = new Intent(Intent.ACTION_VIEW, bookUri, this, BookContentActivity.class);
+		it.putExtra(BookContentActivity.EXTRA_BOOK_TITLE, book.title);
 		startActivity(it);
 	}
 
-	private Uri getCategoryUri() {
-		Uri uri = null;
-
+	private void initFromIntent() {
 		Intent it = getIntent();
 		if(Intent.ACTION_VIEW.equals(it.getAction())) {
-			uri = it.getData();
+			mCategoryUri = it.getData();
 		}
-
-		return uri;
 	}
 	
 	private List<Book> getBooks(Context c, Uri categoryUri) {
