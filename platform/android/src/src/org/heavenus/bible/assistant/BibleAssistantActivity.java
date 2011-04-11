@@ -44,7 +44,8 @@ public class BibleAssistantActivity extends Activity {
 					public void onClick(View v) {
 						// Show books in specific category.
 						Intent it = new Intent(Intent.ACTION_VIEW, cat.uri,
-								BibleAssistantActivity.this, BookActivity.class);
+								BibleAssistantActivity.this, BookListActivity.class);
+						it.putExtra(BookListActivity.EXTRA_CATEGORY_TITLE, cat.title);
 						startActivity(it);
 					}
 				});

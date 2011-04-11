@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class BookListActivity extends Activity implements AdapterView.OnItemClickListener {
+	static final String EXTRA_CATEGORY_TITLE = "org.heavenus.bible.assistant.intent.extra.CATEGORY_TITLE"; // String
+	
 	private ListView mBookListView;
 	
 	private class Book {
@@ -24,6 +26,7 @@ public class BookListActivity extends Activity implements AdapterView.OnItemClic
 		public String title;
 	}
 	private Uri mCategoryUri;
+	private String mCategoryTitle;
 	private List<Book> mBooks;
 	
     @Override
@@ -34,6 +37,8 @@ public class BookListActivity extends Activity implements AdapterView.OnItemClic
         mBookListView = (ListView) findViewById(R.id.book_list);
 
         initFromIntent();
+        
+        setTitle(mCategoryTitle);
         
         // Get all books in current category.
         mBooks = getBooks(this, mCategoryUri);
@@ -64,6 +69,7 @@ public class BookListActivity extends Activity implements AdapterView.OnItemClic
 		Intent it = getIntent();
 		if(Intent.ACTION_VIEW.equals(it.getAction())) {
 			mCategoryUri = it.getData();
+			mCategoryTitle = it.getStringExtra(EXTRA_CATEGORY_TITLE);
 		}
 	}
 	

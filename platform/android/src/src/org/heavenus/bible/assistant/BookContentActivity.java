@@ -9,8 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,6 +32,7 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
 		public int sectionId;
 
 		public boolean isTitle;
+		public boolean isMainTitle;
 		public boolean isChapterTitle;
 	}
 	private Uri mBookUri;
@@ -48,6 +47,8 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
         mSectionListView = (ListView) findViewById(R.id.section_list);
         
         initFromIntent();
+        
+        setTitle(mBookTitle);
         
         // Get current book content.
         mSections = getBookSections(this, mBookUri);
@@ -66,14 +67,13 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
 		
 		// Show current section comment.
 		Intent it = new Intent(Intent.ACTION_VIEW, commentUri, this, CommentActivity.class);
-		CharSequence text = ((TextView) view).getText();
-		if(s.isChapterTitle) {
-			text = new StringBuilder(mBookTitle).append('\n').append(text);
-		} else {
-			String chapter = getResources().getString(R.string.chapter_title, s.chapterId, ""); // FIXME: lost chapter title,
-			text = new StringBuilder(mBookTitle).append('\n').append(chapter).append('\n').append(text);
+		it.putExtra(CommentActivity.EXTRA_BOOK_TITLE, mBookTitle);
+		CharSequence sectionText = ((TextView) view).getText();
+		if(!s.isMainTitle && !s.isChapterTitle) {
+			String chapter = getResources().getString(R.string.section_chapter, s.chapterId, ""); // FIXME: lost chapter title,
+			sectionText = new StringBuilder().append(chapter).append('\n').append(sectionText);
 		}
-		it.putExtra(CommentActivity.EXTRA_SECTION_CONTENT, text);
+		it.putExtra(CommentActivity.EXTRA_SECTION_CONTENT, sectionText);
 		startActivity(it);
 	}
 	
@@ -95,21 +95,25 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
     	if(cursor != null) {
     		if(cursor.moveToFirst()) {
     			do {
+    				// Initialize every section.
+    				//
     				Section s = new Section();
     				s.name = cursor.getString(cursor.getColumnIndex(BibleStore.BookContentColumns.SECTION));
     				s.content = cursor.getString(cursor.getColumnIndex(BibleStore.BookContentColumns.CONTENT));
 
+    				// Get section details according to section name.
     				if(!TextUtils.isEmpty(s.name)) {
     					int index1 = s.name.indexOf('.');
     					try {
     						s.chapterId = Integer.parseInt(s.name.substring(0, index1));
     					} catch(Exception e) {}
-    					
+
     					try {
     						int index2 = s.name.indexOf('t');
     						if(index2 != -1) {
     							s.isTitle = true;
     							s.sectionId = Integer.parseInt(s.name.substring(index1 + 1, index2));
+    							s.isMainTitle = (s.sectionId < 0);
     							s.isChapterTitle = (s.sectionId == 0);
     						} else {
     							s.sectionId = Integer.parseInt(s.name.substring(index1 + 1));
@@ -145,33 +149,31 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView v = null;
-			if(convertView != null && convertView instanceof TextView) {
-				v = (TextView) convertView;
-			} else {
-				v = new TextView(BookContentActivity.this);
-			}
-
-			// Show different section content formats.
+			View view = null;
+			
+			// Format sections content using different layouts.
 			Section s = mSections.get(position);
 			CharSequence text = null;
-			if(s.isChapterTitle) {
-				text = getResources().getString(R.string.chapter_title, s.chapterId, s.content);
-				v.setTypeface(null, Typeface.BOLD);
-				v.setTextColor(Color.RED);
+			if(s.isMainTitle) {
+				text = s.content;
+				view = View.inflate(BookContentActivity.this, R.layout.section_main_title, null);
+			} else if(s.isChapterTitle) {
+				text = getResources().getString(R.string.section_chapter, s.chapterId, s.content);
+				view = View.inflate(BookContentActivity.this, R.layout.section_chapter_title, null);
 			} else if(s.isTitle) {
-				text = new StringBuilder("      ").append(s.content); // FIXME: indent
-				v.setTypeface(null, Typeface.BOLD);
-				v.setTextColor(Color.GREEN);
-			} else {
-				text = new StringBuilder("  ").append(getResources().getString( // FIXME: indent
-						R.string.section_content_general, s.sectionId, s.content));
-				v.setTypeface(null, Typeface.NORMAL);
-				v.setTextColor(Color.WHITE);
+				text = s.content;
+				view = View.inflate(BookContentActivity.this, R.layout.section_part_title, null);
+			} else { // Main body
+				text = getResources().getString(R.string.section_main_body, s.sectionId, s.content);
+				view = View.inflate(BookContentActivity.this, R.layout.section_main_body, null);
 			}
-			v.setText(text);
 			
-			return v;
+			TextView tv = (TextView) view.findViewById(android.R.id.text1);
+			if(tv != null) {
+				tv.setText(text);
+			}
+
+			return view;
 		}
 	};
 }
