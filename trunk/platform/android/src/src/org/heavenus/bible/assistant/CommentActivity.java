@@ -13,12 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class CommentActivity extends Activity {
+	static final String EXTRA_BOOK_TITLE = "org.heavenus.bible.assistant.intent.extra.BOOK_TITLE"; // String
 	static final String EXTRA_SECTION_CONTENT = "org.heavenus.bible.assistant.intent.extra.SECTION_CONTENT"; // String
 
 	private TextView mSectionView;
 	private EditText mCommentView;
 	
 	private Uri mSectionUri;
+	private String mBookTitle;
 	private String mSectionName;
 	private String mSectionContent;
 	
@@ -35,6 +37,7 @@ public class CommentActivity extends Activity {
         
         initFromIntent();
 
+        setTitle(mBookTitle);
         mSectionView.setText(mSectionContent);
 
         String comment = getComment(this, mSectionUri);
@@ -66,6 +69,7 @@ public class CommentActivity extends Activity {
 		if(Intent.ACTION_VIEW.equals(it.getAction())) {
 			mSectionUri = it.getData();
 			mSectionName = BibleStore.getSectionName(mSectionUri);
+			mBookTitle = it.getStringExtra(EXTRA_BOOK_TITLE);
 			mSectionContent = it.getStringExtra(EXTRA_SECTION_CONTENT);
 		}
     }
