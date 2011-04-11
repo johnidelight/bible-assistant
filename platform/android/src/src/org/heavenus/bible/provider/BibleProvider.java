@@ -28,12 +28,14 @@ import android.net.Uri;
  *			content://org.heavenus.bible/zh_CN/2/book_jesus/2.11
  * 
  *	Section name format:
- * 		(1)General section: <chapter_number(>0)>.<section_number(>0)>
- * 			eg: 2.3
- * 		(2)Chapter title: <chapter_number(>0)>.0t
+ * 		(1)Main title section: <chapter_number(>0)>.<section_number(<0)>t
+ * 			eg: 1.-1t
+ * 		(2)Chapter title section: <chapter_number(>0)>.0t
  * 			eg: 1.0t
- * 		(3)Chapter section title: <chapter_number(>0)>.<section_number(>0)>t
- * 			eg: 2.3t
+ * 		(3)Part title section: <chapter_number(>0)>.<section_number(>0)>t
+ * 			eg: 1.1t
+ * 		(4)Main body section: <chapter_number(>0)>.<section_number(>0)>
+ * 			eg: 1.1
  */
 public class BibleProvider extends ContentProvider {
 	static final String AUTHORITY = "org.heavenus.bible";
