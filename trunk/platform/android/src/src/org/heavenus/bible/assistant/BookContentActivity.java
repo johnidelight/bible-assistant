@@ -70,7 +70,7 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
 		it.putExtra(CommentActivity.EXTRA_BOOK_TITLE, mBookTitle);
 		CharSequence sectionText = ((TextView) view).getText();
 		if(!s.isMainTitle && !s.isChapterTitle) {
-			String chapter = getResources().getString(R.string.section_chapter, s.chapterId, ""); // FIXME: lost chapter title,
+			String chapter = getResources().getString(R.string.section_chapter, s.chapterId, ""); // FIXME: lost chapter title
 			sectionText = new StringBuilder().append(chapter).append('\n').append(sectionText);
 		}
 		it.putExtra(CommentActivity.EXTRA_SECTION_CONTENT, sectionText);
