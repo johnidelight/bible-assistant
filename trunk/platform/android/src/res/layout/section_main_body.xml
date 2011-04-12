@@ -22,4 +22,5 @@
     android:gravity="left|center_vertical"
     android:paddingLeft="6dp"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:textColor="#FFFFFF" />
+    android:textColor="#FFFFFF"
+    />

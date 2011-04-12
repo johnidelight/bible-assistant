@@ -24,10 +24,15 @@ import org.heavenus.bible.provider.BibleStore;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -75,7 +80,38 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
     }
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.system_menu, menu);
+
+	    return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.setting:
+			// Show settings.
+			Intent it = new Intent(this, SettingActivity.class);
+			startActivity(it);
+			return true;
+		default:
+			break;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		// Not show comment if comment mode is disabled.
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		if(pref != null) {
+			boolean enabled = pref.getBoolean(getResources().getString(R.string.key_comment_enable_comment),
+					getResources().getBoolean(R.bool.default_value_comment_enable_comment));
+			if(!enabled)  return;
+		}
+
 		// Generate comment uri for current section.
 		Section s = mSections.get(position);
 		Uri commentUri = Uri.withAppendedPath(BibleStore.BIBLE_COMMENT_CONTENT_URI, BibleStore.getBookName(mBookUri));
@@ -116,6 +152,9 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
     				Section s = new Section();
     				s.name = cursor.getString(cursor.getColumnIndex(BibleStore.BookContentColumns.SECTION));
     				s.content = cursor.getString(cursor.getColumnIndex(BibleStore.BookContentColumns.CONTENT));
+    				if(s.content == null) {
+    					s.content = "";
+    				}
 
     				// Get section details according to section name.
     				if(!TextUtils.isEmpty(s.name)) {

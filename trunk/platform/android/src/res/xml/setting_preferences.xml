@@ -14,15 +14,16 @@
      limitations under the License.
 -->
 
-<resources>
-    <string name="app_name">BibleAssistant</string>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="section_chapter">Chapter%1$d %2$s</string>
-    <string name="section_main_body">%1$d. %2$s</string>
+	<PreferenceCategory android:title="@string/comment">
 
-    <string name="comment">Comment:</string>
-    <string name="enable_comment">Enable comment</string>
-    
-    <string name="setting">Settings</string>
+        <CheckBoxPreference
+        	android:key="@string/key_comment_enable_comment"
+			android:title="@string/enable_comment"
+			android:defaultValue="@bool/default_value_comment_enable_comment"
+			/>
 
-</resources>
+    </PreferenceCategory>
+
+</PreferenceScreen>

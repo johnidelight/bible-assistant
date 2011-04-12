@@ -14,15 +14,10 @@
      limitations under the License.
 -->
 
-<resources>
-    <string name="app_name">BibleAssistant</string>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="section_chapter">Chapter%1$d %2$s</string>
-    <string name="section_main_body">%1$d. %2$s</string>
+    <item android:id="@+id/setting"
+          android:title="@string/setting"
+          />
 
-    <string name="comment">Comment:</string>
-    <string name="enable_comment">Enable comment</string>
-    
-    <string name="setting">Settings</string>
-
-</resources>
+</menu>

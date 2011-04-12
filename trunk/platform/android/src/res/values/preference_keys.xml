@@ -14,11 +14,11 @@
      limitations under the License.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/root_layout"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+<!-- This contains all preference keys, no need localization.-->
+<resources>
 
-</LinearLayout>
+	<!-- Whether enable comment mode. -->
+	<string name="key_comment_enable_comment">enable_comment</string>
+	<bool name="default_value_comment_enable_comment">true</bool>
+
+</resources>
