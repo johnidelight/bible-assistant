@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.heavenus.bible.provider.BibleStore;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,9 +29,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,7 +36,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class BookContentActivity extends Activity implements ListView.OnItemClickListener {
+public class BookContentActivity extends BaseActivity implements ListView.OnItemClickListener {
 	static final String EXTRA_BOOK_TITLE = "org.heavenus.bible.assistant.intent.extra.BOOK_TITLE"; // String
 	
 	private ListView mSectionListView;
@@ -78,29 +74,6 @@ public class BookContentActivity extends Activity implements ListView.OnItemClic
 			mSectionListView.setOnItemClickListener(this);
 		}
     }
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.system_menu, menu);
-
-	    return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-		case R.id.setting:
-			// Show settings.
-			Intent it = new Intent(this, SettingActivity.class);
-			startActivity(it);
-			return true;
-		default:
-			break;
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
