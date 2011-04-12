@@ -53,6 +53,13 @@
                 <data android:mimeType="vnd.android.cursor.item/vnd.heavenus.bible.comment.section" />
             </intent-filter>
         </activity>
+        
+        <activity android:name=".SettingActivity" android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
 		<provider android:name="org.heavenus.bible.provider.BibleProvider"
 			android:authorities="org.heavenus.bible"

@@ -21,5 +21,8 @@
     <string name="section_main_body">%1$d. %2$s</string>
 
     <string name="comment">感想：</string>
+    <string name="enable_comment">启用感想</string>
     
+    <string name="setting">设置</string>
+
 </resources>

@@ -22,4 +22,5 @@
     android:gravity="center"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:textColor="#FF0000"
-    android:textStyle="bold" />
+    android:textStyle="bold"
+    />
