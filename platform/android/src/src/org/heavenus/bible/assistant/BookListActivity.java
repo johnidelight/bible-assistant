@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.heavenus.bible.provider.BibleStore;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -32,7 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class BookListActivity extends Activity implements AdapterView.OnItemClickListener {
+public class BookListActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 	static final String EXTRA_CATEGORY_TITLE = "org.heavenus.bible.assistant.intent.extra.CATEGORY_TITLE"; // String
 	
 	private ListView mBookListView;

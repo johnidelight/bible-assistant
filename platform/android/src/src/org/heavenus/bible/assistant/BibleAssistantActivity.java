@@ -22,7 +22,6 @@ import java.util.Locale;
 
 import org.heavenus.bible.provider.BibleStore;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +32,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-public class BibleAssistantActivity extends Activity {
+public class BibleAssistantActivity extends BaseActivity {
 	private class BookCategory {
 		public String title;
 		public Uri uri;

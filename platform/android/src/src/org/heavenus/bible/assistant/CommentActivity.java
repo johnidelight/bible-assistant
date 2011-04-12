@@ -18,7 +18,6 @@ package org.heavenus.bible.assistant;
 
 import org.heavenus.bible.provider.BibleStore;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +27,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class CommentActivity extends Activity {
+public class CommentActivity extends BaseActivity {
 	static final String EXTRA_BOOK_TITLE = "org.heavenus.bible.assistant.intent.extra.BOOK_TITLE"; // String
 	static final String EXTRA_SECTION_CONTENT = "org.heavenus.bible.assistant.intent.extra.SECTION_CONTENT"; // String
 
