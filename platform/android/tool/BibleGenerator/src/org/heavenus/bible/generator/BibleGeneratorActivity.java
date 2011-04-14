@@ -120,6 +120,7 @@ public class BibleGeneratorActivity extends Activity {
 							continue;
 						}
 						
+						succeeded ++;
 						publishProgress("Succeeded!");
 					}
 				}
