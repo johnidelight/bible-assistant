@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -38,8 +39,8 @@ public class CommentActivity extends BaseActivity {
 	private String mBookTitle;
 	private String mSectionName;
 	private String mSectionContent;
-	
-	private boolean mHasCommentRecord = false;
+
+	private String mComment;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,28 +56,18 @@ public class CommentActivity extends BaseActivity {
         setTitle(mBookTitle);
         mSectionView.setText(mSectionContent);
 
-        String comment = getComment(this, mSectionUri);
-        if(comment != null) {
-        	mHasCommentRecord = true;
-        	mCommentView.setText(comment);
+        mComment = getComment(this, mSectionUri);
+        if(mComment != null) {
+        	mCommentView.setText(mComment);
         }
     }
 
     @Override
 	protected void onPause() {
 		super.onPause();
-		
-		// Save comment.
-		if(mHasCommentRecord) {
-			ContentValues values = new ContentValues();
-			values.put(BibleStore.BookCommentColumns.COMMENT, mCommentView.getText().toString());
-			getContentResolver().update(mSectionUri, values, null, null);
-		} else {
-			ContentValues values = new ContentValues();
-			values.put(BibleStore.BookCommentColumns.SECTION, mSectionName);
-			values.put(BibleStore.BookCommentColumns.COMMENT, mCommentView.getText().toString());
-			mHasCommentRecord = (getContentResolver().insert(mSectionUri, values) != null);
-		}
+
+		// Save new comment here.
+		saveComment(mCommentView.getText().toString());
 	}
 
 	private void initFromIntent() {
@@ -105,5 +96,26 @@ public class CommentActivity extends BaseActivity {
     	}
 		
 		return comment;
+    }
+    
+    private void saveComment(String newComment) {
+    	if(mComment != null) {
+			if(!mComment.equals(newComment)) {
+				mComment = newComment;
+
+				ContentValues values = new ContentValues();
+				values.put(BibleStore.BookCommentColumns.COMMENT, mComment);
+				getContentResolver().update(mSectionUri, values, null, null);
+			}
+		} else {
+			if(!TextUtils.isEmpty(newComment)) {
+				mComment = newComment;
+
+				ContentValues values = new ContentValues();
+				values.put(BibleStore.BookCommentColumns.SECTION, mSectionName);
+				values.put(BibleStore.BookCommentColumns.COMMENT, mComment);
+				getContentResolver().insert(mSectionUri, values);
+			}
+		}
     }
 }
