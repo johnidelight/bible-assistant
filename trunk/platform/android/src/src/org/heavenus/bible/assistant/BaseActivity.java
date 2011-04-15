@@ -17,10 +17,16 @@
 package org.heavenus.bible.assistant;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 /*
  * Base activity to supply common behaviors such as option menus, etc.
@@ -38,14 +44,42 @@ public class BaseActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.setting:
-			// Show settings.
-			Intent it = new Intent(this, SettingActivity.class);
-			startActivity(it);
+			{
+				// Show settings.
+				Intent it = new Intent(this, SettingActivity.class);
+				startActivity(it);
+			}
+			return true;
+		case R.id.about:
+			{
+				// Show about infos.
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				CharSequence title = new StringBuilder(getResources().getString(R.string.about))
+						.append(' ') .append(getResources().getString(R.string.app_name));
+				builder.setTitle(title).setIcon(R.drawable.icon).setView(getAboutView())
+						.create().show();
+			}
 			return true;
 		default:
 			break;
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private View getAboutView() {
+		View v = View.inflate(this, R.layout.about, null);
+
+		// Get application version.
+		TextView tv = (TextView) v.findViewById(R.id.version);
+		try {
+			PackageManager pm = getPackageManager();
+			PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
+			tv.setText("V " + info.versionName);
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return v;
 	}
 }

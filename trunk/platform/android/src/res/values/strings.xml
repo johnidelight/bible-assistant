@@ -24,5 +24,10 @@
     <string name="enable_comment">Enable comment</string>
     
     <string name="setting">Settings</string>
+    <string name="about">About</string>
 
+	<!-- Belows are author infos, no need localization.-->
+	<string name="author_email">johnidelight@gmail.com</string>
+	<string name="author_homepage">http://www.heavenus.org</string>
+	<string name="author_copyright">Copyright (C) 2011 Heavenus.org</string>
 </resources>
