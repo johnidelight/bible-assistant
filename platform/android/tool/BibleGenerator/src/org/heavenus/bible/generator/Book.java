@@ -81,7 +81,7 @@ class Book {
 					if(count > 0) {
 						// Add new section.
 						Section s = new Section();
-						s.name = fields[0];
+						s.name = fields[0].trim();
 						s.content = (count > 1 ? fields[1] : "");
 						mSections.add(s);
 					}

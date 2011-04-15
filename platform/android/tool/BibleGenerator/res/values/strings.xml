@@ -17,7 +17,7 @@
 <resources>
     <string name="app_name">BibleGenerator</string>
     
-	<string name="source_path">Source Bible books path:  /sdcard/bible/</string>
+	<string name="source_path">1. Source Bible books path:  /sdcard/bible/</string>
 	<string name="source_format">
 		* Child book file name: &lt;*>.txt\n
 		* Child book file content:\n
@@ -25,10 +25,12 @@
 		&lt;section_name>&lt;TAB>&lt;section_content>\n
 		...
 	</string>
-	<string name="dest_path">Destination Bible database path:  /sdcard/bible/bible.db</string>
+	<string name="dest_path">2. Destination Bible database path:  /sdcard/bible/bible.db</string>
 	<string name="dest_format">
 		* Book file name(without extension) will be used as table name.\n
 		* Old table data will be replaced with new book content.
 	</string>
 	<string name="generate">Generate</string>
+	
+	<string name="exit_warning">Waiting...</string>
 </resources>

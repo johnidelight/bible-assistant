@@ -18,6 +18,7 @@ package org.heavenus.bible.generator;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -25,11 +26,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.heavenus.bible.provider.BibleStore;;
 
@@ -37,11 +39,14 @@ public class BibleGeneratorActivity extends Activity {
 	private static final String BOOKS_DIR = "/sdcard/bible";
 	private static final String BOOK_EXTENSION = ".txt";
 	private static final String DATABASE_PATH = BOOKS_DIR + "/bible.db";
+
+	private static final Pattern SECTION_NAME_PATTERN = Pattern.compile(BibleStore.SECTION_NAME_REGEX);
 	
 	private Button mBtnGenerate;
 	private ListView mMessageList;
-	
 	private ArrayAdapter<String> mMessageAdapter;
+	
+	private BibleTask mTask;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,8 @@ public class BibleGeneratorActivity extends Activity {
         mBtnGenerate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				(new BibleTask()).execute();
+				mTask = new BibleTask();
+				mTask.execute();
 			}
 		});
 
@@ -63,8 +69,21 @@ public class BibleGeneratorActivity extends Activity {
         mMessageList.setAdapter(mMessageAdapter);
         mMessageList.setSelectionAfterHeaderView();
     }
-    
-    private class BibleTask extends AsyncTask<Void, String, String> {
+
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	// Exiting is not allowed if task has not been finished.
+    	if(keyCode == KeyEvent.KEYCODE_BACK) {
+    		if(mTask != null && mTask.getStatus() != AsyncTask.Status.FINISHED) {
+    			Toast.makeText(this, R.string.exit_warning, Toast.LENGTH_SHORT).show();
+    			return true;
+    		}
+    	}
+
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private class BibleTask extends AsyncTask<Void, String, String> {
     	@Override
 		protected String doInBackground(Void... params) {
 			return generate();
@@ -105,8 +124,7 @@ public class BibleGeneratorActivity extends Activity {
 				});
 				
 				// Import every book content to database table.
-				if(files != null) {
-					total = files.length;
+				if(files != null && (total = files.length) > 0) {
 					publishProgress("Found book count: " + total);
 					
 					for(int i = 0; i < total; i ++) {
@@ -154,9 +172,9 @@ public class BibleGeneratorActivity extends Activity {
 					for(int i = 0; i < count ; i ++) {
 						// Ensure valid section name first.
 						Book.Section s = b.getSection(i);
-						if(TextUtils.isEmpty(s.name)) {
+						if(!SECTION_NAME_PATTERN.matcher(s.name).matches()) {
 							publishProgress(new StringBuilder("Section ")
-									.append(i + 1).append(" name cannot be empty!").toString());
+									.append(i + 1).append(" name is invalid!").toString());
 							throw new SQLiteException("Failed to insert section record!");
 						}
 
@@ -165,7 +183,7 @@ public class BibleGeneratorActivity extends Activity {
 						values.put(BibleStore.BookContentColumns.CONTENT, s.content);
 						if(db.insert(table, null, values) == -1) {
 							publishProgress(new StringBuilder("Section ")
-									.append(i + 1).append(" has error!").toString());
+									.append(i + 1).append(" has errors!").toString());
 							throw new SQLiteException("Failed to insert section record!");
 						}
 					}
