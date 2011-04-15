@@ -1,5 +1,5 @@
 #summary One-sentence summary of this page.
-#labels Android,Bible,Assistant,Book,Dictionary,Featured
+#labels Bible,Android,Book,Dictionary,Featured
 
 = Introduction =
 
