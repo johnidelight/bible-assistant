@@ -1,0 +1,3 @@
+ 	Empty section name is not allowed!
+a	Section name doesn't meet the rule!
+
