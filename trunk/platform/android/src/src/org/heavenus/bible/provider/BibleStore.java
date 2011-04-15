@@ -24,6 +24,8 @@ import android.provider.BaseColumns;
 public class BibleStore {
 	public static final Uri BIBLE_CONTENT_URI = BibleProvider.CONTENT_URI;
 	public static final Uri BIBLE_COMMENT_CONTENT_URI = BibleCommentProvider.CONTENT_URI;
+	
+	public static final String SECTION_NAME_REGEX = "\\d+.-?\\d+t?";
 
 	public static final class LocaleColumns implements BaseColumns {
 		/* The bible locale name.
