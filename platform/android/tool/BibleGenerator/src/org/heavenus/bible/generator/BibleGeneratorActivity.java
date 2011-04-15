@@ -99,13 +99,16 @@ public class BibleGeneratorActivity extends Activity {
 		protected void onProgressUpdate(String... values) {
 			mMessageAdapter.add(values[0]);
 			mMessageList.setSelection(mMessageAdapter.getCount() - 1);
-			
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
+			String divider = "-------------------------------------------------------";
+			mMessageAdapter.add(divider);
 			mMessageAdapter.add(result);
+			mMessageAdapter.add(divider);
 			mMessageList.setSelection(mMessageAdapter.getCount() - 1);
+
 			mBtnGenerate.setEnabled(true);
 		}
 
@@ -145,8 +148,8 @@ public class BibleGeneratorActivity extends Activity {
 			}
 			
 			return new StringBuilder("Total books: ").append(total)
-					.append("; Succeeded: ").append(succeeded)
-					.append("; Failed: ").append(total - succeeded).toString();
+					.append("; succeeded: ").append(succeeded)
+					.append("; failed: ").append(total - succeeded).toString();
 		}
 		
 		private void bookToTable(Book b) throws SQLiteException {
