@@ -65,13 +65,15 @@ class Book {
 	private void init(File book) throws IOException {
 		InputStream in = null;
 		try {
-			// Read all content.
+			// Read all book content.
 			in = new BufferedInputStream(new FileInputStream(book));
 			byte[] data = new byte[in.available()];
 			in.read(data);
+			
+			// Skip beginning encoding data.
+			String content = new String(data).substring(1);
 
 			// Parse every line.
-			String content = new String(data);
 			String[] rows = content.split("\r\n");
 			for(String r : rows) {
 				// Parse every field.

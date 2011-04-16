@@ -4,7 +4,7 @@ Usage: generate book tables in bible database according to book text files.
 1.Source Bible books path: /sdcard/bible/
 
  * Child book file name: <*>.txt
- * Child book file content:
+ * Child book file content(UTF8):
 	<section_name><TAB><section_content>
 	<section_name><TAB><section_content>
 	... 
