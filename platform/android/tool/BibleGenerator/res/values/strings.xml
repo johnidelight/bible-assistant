@@ -20,7 +20,7 @@
 	<string name="source_path">1. Source Bible books path:  /sdcard/bible/</string>
 	<string name="source_format">
 		* Child book file name: &lt;*>.txt\n
-		* Child book file content:\n
+		* Child book file content(UTF8):\n
 		&lt;section_name>&lt;TAB>&lt;section_content>\n
 		&lt;section_name>&lt;TAB>&lt;section_content>\n
 		...

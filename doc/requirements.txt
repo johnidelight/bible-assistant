@@ -6,20 +6,29 @@ BibleAssistant v0.1.0
 * supply settings to enable/disable comment mode.
 
 
+
 BibleAssistant v0.1.1
 ---------------------
-* support word searching.
-* add context menu for every section words: copy; set as new message content; etc.
+* save last book reading position.
 
 
 
 BibleAssistant v0.1.2
 ---------------------
-* add app widget: Random Word.
+* support word searching.
+* bookmark manager: save/restore
+* add context menu for every section words: copy; set as new message content; etc.
 
 
 
 BibleAssistant v0.1.3
+---------------------
+* add app widget: Random Word.
+* support voice reading section words.
+
+
+
+BibleAssistant v0.1.4
 ---------------------
 * add app widget: Daily Word
 
@@ -28,5 +37,3 @@ BibleAssistant v0.1.3
 More future versions:
 * add more Bible language content: English, etc.
 * supply settings to view and choose different Bible languages.
-
-
