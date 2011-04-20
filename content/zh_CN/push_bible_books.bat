@@ -1,0 +1,1 @@
+ziiadb push bible /sdcard/bible
