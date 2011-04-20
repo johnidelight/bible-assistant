@@ -1,0 +1,1 @@
+ziiadb pull /sdcard/bible/bible.db .
