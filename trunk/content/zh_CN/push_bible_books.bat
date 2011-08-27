@@ -1,1 +1,1 @@
-ziiadb push bible /sdcard/bible
+adb push bible /sdcard/bible
