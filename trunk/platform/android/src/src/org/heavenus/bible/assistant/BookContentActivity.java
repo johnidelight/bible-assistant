@@ -186,7 +186,7 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 				text = s.content;
 				view = View.inflate(BookContentActivity.this, R.layout.section_main_title, null);
 			} else if(s.isChapterTitle) {
-				text = getResources().getString(R.string.section_chapter, s.chapterId, s.content);
+				text = s.content;
 				view = View.inflate(BookContentActivity.this, R.layout.section_chapter_title, null);
 			} else if(s.isTitle) {
 				text = s.content;
