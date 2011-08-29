@@ -9,8 +9,8 @@ BibleAssistant v0.1.0
 
 BibleAssistant v0.1.1
 ---------------------
+* Complete Chinese Simplied bible content.
 * save last book reading position.
-
 
 
 BibleAssistant v0.1.2
