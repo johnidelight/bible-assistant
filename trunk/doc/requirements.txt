@@ -8,13 +8,13 @@ BibleAssistant v0.1.0
 
 BibleAssistant v0.1.1
 ---------------------
-* complete bible content(Chinese Simplied version) - New Testament.
+* complete Bible content(Chinese Simplied version) - New Testament (need review).
 * show fast scrolling thumb in content list.
 
 
 BibleAssistant v0.1.2
 ---------------------
-* complete bible content(Chinese Simplied version)  - Old Testament.
+* complete Bible content(Chinese Simplied version)  - Old Testament (need review).
 
 
 BibleAssistant v0.1.3
