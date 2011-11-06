@@ -16,8 +16,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.heavenus.bible.assistant"
-	android:versionCode="1"
-	android:versionName="0.1.0 - preview">
+	android:versionCode="2"
+	android:versionName="0.1.1">
 
     <uses-sdk android:minSdkVersion="4" />
 
