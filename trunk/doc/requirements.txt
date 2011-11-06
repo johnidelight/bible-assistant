@@ -6,14 +6,29 @@ BibleAssistant v0.1.0
 * supply settings to enable/disable comment mode.
 
 
-
 BibleAssistant v0.1.1
 ---------------------
-* Complete Chinese Simplied bible content.
-* save last book reading position.
+* complete bible content(Chinese Simplied version) - New Testament.
+* show fast scrolling thumb in content list.
 
 
 BibleAssistant v0.1.2
+---------------------
+* complete bible content(Chinese Simplied version)  - Old Testament.
+
+
+BibleAssistant v0.1.3
+---------------------
+* save every book reading position.
+* show icon for section item which has comments.
+
+
+BibleAssistant v0.1.4
+---------------------
+* review bible content(Chinese Simplied version), correct content errors.
+
+
+BibleAssistant v0.1.5
 ---------------------
 * support word searching.
 * bookmark manager: save/restore
@@ -21,14 +36,14 @@ BibleAssistant v0.1.2
 
 
 
-BibleAssistant v0.1.3
+BibleAssistant v0.1.6
 ---------------------
 * add app widget: Random Word.
 * support voice reading section words.
 
 
 
-BibleAssistant v0.1.4
+BibleAssistant v0.1.7
 ---------------------
 * add app widget: Daily Word
 
