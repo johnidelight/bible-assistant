@@ -36,7 +36,7 @@ import android.text.TextUtils;
  *			content://org.heavenus.bible.comment/book_god/1.1
  *			content://org.heavenus.bible.comment/book_jesus/2.11
  *
- *	Sectin name format: same with definition in Bible content provider.
+ *	Section name format: same with definition in Bible content provider.
  */
 public class BibleCommentProvider extends ContentProvider {
 	static final String AUTHORITY = "org.heavenus.bible.comment";
@@ -147,7 +147,7 @@ public class BibleCommentProvider extends ContentProvider {
 			break;
 		case MATCH_SECTION:
 			{
-				table  = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK); // Book name is the table name.
+				table = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK); // Book name is the table name.
 				String section = uri.getPathSegments().get(URI_SEGMENT_INDEX_SECTION);
 				StringBuilder sb = new StringBuilder(BibleStore.BookCommentColumns.SECTION)
 						.append("=\'").append(section).append('\'');

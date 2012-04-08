@@ -17,7 +17,7 @@
 <resources>
     <string name="app_name">圣经助手</string>
 
-    <string name="section_chapter">第%1$d章 %2$s</string>
+    <string name="section_chapter">第%1$s章 %2$s</string>
     <string name="section_main_body">%1$d. %2$s</string>
 
     <string name="comment">感想：</string>
