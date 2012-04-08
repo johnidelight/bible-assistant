@@ -25,7 +25,7 @@ public class BibleStore {
 	public static final Uri BIBLE_CONTENT_URI = BibleProvider.CONTENT_URI;
 	public static final Uri BIBLE_COMMENT_CONTENT_URI = BibleCommentProvider.CONTENT_URI;
 	
-	public static final String SECTION_NAME_REGEX = "\\d+.-?\\d+t?";
+	public static final String SECTION_NAME_REGEX = "\\d+[a-z]?.-?\\d+t?";
 
 	public static final class LocaleColumns implements BaseColumns {
 		/* The bible locale name.
@@ -111,12 +111,12 @@ public class BibleStore {
 		String authority = uri.getAuthority();
 		if(BibleProvider.AUTHORITY.equals(authority)) {
 			List<String> segs = uri.getPathSegments();
-			if(segs.size() > BibleProvider.URI_SEGMENT_INDEX_BOOK) {
+			if(segs.size() > BibleProvider.URI_SEGMENT_INDEX_SECTION) {
 				sectionName = segs.get(BibleProvider.URI_SEGMENT_INDEX_SECTION);
 			}
 		} else if(BibleCommentProvider.AUTHORITY.equals(authority)) {
 			List<String> segs = uri.getPathSegments();
-			if(segs.size() > BibleCommentProvider.URI_SEGMENT_INDEX_BOOK) {
+			if(segs.size() > BibleCommentProvider.URI_SEGMENT_INDEX_SECTION) {
 				sectionName = segs.get(BibleCommentProvider.URI_SEGMENT_INDEX_SECTION);
 			}
 		}

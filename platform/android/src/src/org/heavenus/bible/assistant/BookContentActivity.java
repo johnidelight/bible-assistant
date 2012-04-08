@@ -45,7 +45,7 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 		public String name;
 		public String content;
 		
-		public int chapterId;
+		public String chapterId;
 		public int sectionId;
 
 		public boolean isTitle;
@@ -133,7 +133,7 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
     				if(!TextUtils.isEmpty(s.name)) {
     					int index1 = s.name.indexOf('.');
     					try {
-    						s.chapterId = Integer.parseInt(s.name.substring(0, index1));
+    						s.chapterId = s.name.substring(0, index1);
     					} catch(Exception e) {}
 
     					try {

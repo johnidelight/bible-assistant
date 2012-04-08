@@ -177,7 +177,8 @@ public class BibleGeneratorActivity extends Activity {
 						Book.Section s = b.getSection(i);
 						if(!SECTION_NAME_PATTERN.matcher(s.name).matches()) {
 							publishProgress(new StringBuilder("Section ")
-									.append(i + 1).append(" name is invalid!").toString());
+									.append(i + 1).append(" name(").append(s.name)
+									.append(") is invalid!").toString());
 							throw new SQLiteException("Failed to insert section record!");
 						}
 
@@ -186,7 +187,8 @@ public class BibleGeneratorActivity extends Activity {
 						values.put(BibleStore.BookContentColumns.CONTENT, s.content);
 						if(db.insert(table, null, values) == -1) {
 							publishProgress(new StringBuilder("Section ")
-									.append(i + 1).append(" has errors!").toString());
+									.append(i + 1).append("(").append(s.name)
+									.append(") has errors!").toString());
 							throw new SQLiteException("Failed to insert section record!");
 						}
 					}
