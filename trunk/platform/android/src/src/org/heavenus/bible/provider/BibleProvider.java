@@ -45,7 +45,7 @@ import android.net.Uri;
  * 
  *	Section name format:
  *		chapter_number[appendix_letter].section_number[t]
- *		(1) chapter_number:  >0
+ *		(1) chapter_number:  >=0
  *		(2) appendix_letter: [a-z]
  *		(3) dot
  *		(4) section_number: positive or negative
