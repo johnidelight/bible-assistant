@@ -1,1 +1,1 @@
-adb pull /sdcard/bible/bible.db .
+adb pull /sdcard/bible/bible.db .\bible\
