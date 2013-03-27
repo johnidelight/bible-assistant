@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.heavenus.bible.provider.BibleStore;
 
-import android.content.Context;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -38,7 +38,7 @@ import android.widget.TextView;
 
 public class BookContentActivity extends BaseActivity implements ListView.OnItemClickListener {
 	static final String EXTRA_BOOK_TITLE = "org.heavenus.bible.assistant.intent.extra.BOOK_TITLE"; // String
-	
+
 	private ListView mSectionListView;
 	
 	private class Section {
@@ -54,10 +54,12 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 	}
 	private Uri mBookUri;
 	private String mBookTitle;
+	private String mBookMarkSection;
+	private int mBookMarkSectionPos = -1;
 	private List<Section> mSections;
 	
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.book_content);
@@ -67,13 +69,30 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
         
         setTitle(mBookTitle);
         
+        // Get current book mark.
+		mBookMarkSection = getBookMarkSection(mBookUri);
+		
         // Get current book content.
-        mSections = getBookSections(this, mBookUri);
+        mSections = getBookSections(mBookUri);
 		if(mSections != null) {
 			mSectionListView.setAdapter(mSectionAdapter);
 			mSectionListView.setOnItemClickListener(this);
+			
+			// Scroll to the current book mark section.
+			mSectionListView.setSelectionAfterHeaderView();
+			mSectionListView.setSelection(mBookMarkSectionPos);
 		}
     }
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		// Save the current reading section to book mark.
+		mBookMarkSectionPos = mSectionListView.getFirstVisiblePosition();
+		Section s = (Section) mSectionAdapter.getItem(mBookMarkSectionPos);
+		saveBookMarkSection(mBookUri, s.name);
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -82,12 +101,12 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 		if(pref != null) {
 			boolean enabled = pref.getBoolean(getResources().getString(R.string.key_comment_enable_comment),
 					getResources().getBoolean(R.bool.default_value_comment_enable_comment));
-			if(!enabled)  return;
+			if(!enabled) return;
 		}
 
 		// Generate comment uri for current section.
 		Section s = mSections.get(position);
-		Uri commentUri = Uri.withAppendedPath(BibleStore.BIBLE_COMMENT_CONTENT_URI, BibleStore.getBookName(mBookUri));
+		Uri commentUri = Uri.withAppendedPath(BibleStore.BIBLE_MARK_CONTENT_URI, BibleStore.getBookName(mBookUri));
 		commentUri = Uri.withAppendedPath(commentUri, s.name);
 		
 		// Show current section comment.
@@ -110,15 +129,45 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 		}
 	}
 	
-	private List<Section> getBookSections(Context c, Uri bookUri) {
+	private String getBookMarkSection(Uri bookUri) {
+		String section = null;
+
+		String bookName = BibleStore.getBookName(bookUri);
+		Uri bookMarkUri = Uri.withAppendedPath(BibleStore.BIBLE_MARK_CONTENT_URI, bookName);
+
+		String[] projection = new String[] { BibleStore.BookMarkColumns.SECTION };
+		String where = new StringBuilder(
+				BibleStore.BookMarkColumns.NAME).append("=\'").append(bookName).append('\'').toString();
+		Cursor cursor = getContentResolver().query(bookMarkUri, projection, where, null, null);
+		if(cursor != null) {
+    		if(cursor.moveToFirst()) {
+    			section = cursor.getString(cursor.getColumnIndex(BibleStore.BookMarkColumns.SECTION));
+    		}
+		}
+		
+		return section;
+	}
+	
+	private void saveBookMarkSection(Uri bookUri, String section) {
+		String bookName = BibleStore.getBookName(bookUri);
+		Uri bookMarkUri = Uri.withAppendedPath(BibleStore.BIBLE_MARK_CONTENT_URI, bookName);
+		
+		ContentValues values = new ContentValues();
+		values.put(BibleStore.BookMarkColumns.NAME, bookName);
+		values.put(BibleStore.BookMarkColumns.SECTION, section);
+		getContentResolver().insert(bookMarkUri, values);
+	}
+	
+	private List<Section> getBookSections(Uri bookUri) {
 		if(bookUri == null) return null;
 
 		List<Section> sections = new ArrayList<Section>();
 
-    	String[] projection = new String[]{BibleStore.BookContentColumns.SECTION, BibleStore.BookContentColumns.CONTENT};
-    	Cursor cursor = c.getContentResolver().query(bookUri, projection, null, null, null);
+    	String[] projection = new String[] { BibleStore.BookContentColumns.SECTION, BibleStore.BookContentColumns.CONTENT };
+    	Cursor cursor = getContentResolver().query(bookUri, projection, null, null, null);
     	if(cursor != null) {
     		if(cursor.moveToFirst()) {
+    			int pos = 0;
     			do {
     				// Initialize every section.
     				//
@@ -148,8 +197,18 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
     						}
     					} catch(Exception e) {}
     				}
+    				
+    				// Check whether current section is the book mark section.
+    				if(mBookMarkSectionPos <= 0) {
+	    				if(!TextUtils.isEmpty(mBookMarkSection)) {
+	    					if(mBookMarkSection.equals(s.name)) {
+	    						mBookMarkSectionPos = pos;
+	    					}
+	    				}
+    				}
 
     				sections.add(s);
+    				pos ++;
     			} while(cursor.moveToNext());
     		}
     		
@@ -158,7 +217,7 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 		
 		return sections;
 	}
-	
+
 	private BaseAdapter mSectionAdapter = new BaseAdapter() {
 		@Override
 		public int getCount() {
