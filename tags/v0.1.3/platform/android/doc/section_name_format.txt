@@ -1,0 +1,18 @@
+Section name format:
+************************
+chapter_number[appendix_letter].section_number[t]
+
+(1) chapter_number:  >=0
+(2) appendix_letter: [a-z]
+(3) dot
+(4) section_number: positive or negative
+(5) t: title if present; otherwise body
+
+Examples:
+************************
+(1) Main title section: 1.-1t
+(2) Chapter title section: 1.0t
+(3) Part title section: 1.1t
+(4) Main body section: 1.1
+(5) Appendix title section: 1a.0t
+(6) Appendix body section: 1a.1

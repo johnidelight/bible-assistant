@@ -1,0 +1,1 @@
+adb pull /sdcard/bible/bible.db bible\bible.db
