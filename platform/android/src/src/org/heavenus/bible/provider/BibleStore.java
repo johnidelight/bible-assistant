@@ -23,7 +23,7 @@ import android.provider.BaseColumns;
 
 public class BibleStore {
 	public static final Uri BIBLE_CONTENT_URI = BibleProvider.CONTENT_URI;
-	public static final Uri BIBLE_COMMENT_CONTENT_URI = BibleCommentProvider.CONTENT_URI;
+	public static final Uri BIBLE_MARK_CONTENT_URI = BibleMarkProvider.CONTENT_URI;
 	
 	public static final String SECTION_NAME_REGEX = "\\d+[a-z]?.-?\\d+t?";
 
@@ -69,7 +69,19 @@ public class BibleStore {
 		 */
 		public static final String CONTENT = "content";
 	}
-	
+
+	public static final class BookMarkColumns implements BaseColumns {
+		/* The book name.
+		 * Type: TEXT
+		 */
+		public static final String NAME = "name";
+		
+		/* The current reading section of the book.
+		 * Type: TEXT
+		 */
+		public static final String SECTION = "section";
+	}
+
 	public static final class BookCommentColumns implements BaseColumns {
 		/* The section name.
 		 * Type: TEXT
@@ -81,7 +93,7 @@ public class BibleStore {
 		 */
 		public static final String COMMENT = "comment";
 	}
-	
+
 	public static String getBookName(Uri uri) {
 		if(uri == null) return null;
 		
@@ -93,10 +105,10 @@ public class BibleStore {
 			if(segs.size() > BibleProvider.URI_SEGMENT_INDEX_BOOK) {
 				bookName = segs.get(BibleProvider.URI_SEGMENT_INDEX_BOOK);
 			}
-		} else if(BibleCommentProvider.AUTHORITY.equals(authority)) {
+		} else if(BibleMarkProvider.AUTHORITY.equals(authority)) {
 			List<String> segs = uri.getPathSegments();
-			if(segs.size() > BibleCommentProvider.URI_SEGMENT_INDEX_BOOK) {
-				bookName = segs.get(BibleCommentProvider.URI_SEGMENT_INDEX_BOOK);
+			if(segs.size() > BibleMarkProvider.URI_SEGMENT_INDEX_BOOK) {
+				bookName = segs.get(BibleMarkProvider.URI_SEGMENT_INDEX_BOOK);
 			}
 		}
 		
@@ -114,10 +126,10 @@ public class BibleStore {
 			if(segs.size() > BibleProvider.URI_SEGMENT_INDEX_SECTION) {
 				sectionName = segs.get(BibleProvider.URI_SEGMENT_INDEX_SECTION);
 			}
-		} else if(BibleCommentProvider.AUTHORITY.equals(authority)) {
+		} else if(BibleMarkProvider.AUTHORITY.equals(authority)) {
 			List<String> segs = uri.getPathSegments();
-			if(segs.size() > BibleCommentProvider.URI_SEGMENT_INDEX_SECTION) {
-				sectionName = segs.get(BibleCommentProvider.URI_SEGMENT_INDEX_SECTION);
+			if(segs.size() > BibleMarkProvider.URI_SEGMENT_INDEX_SECTION) {
+				sectionName = segs.get(BibleMarkProvider.URI_SEGMENT_INDEX_SECTION);
 			}
 		}
 		

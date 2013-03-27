@@ -45,7 +45,7 @@ public class BookListActivity extends BaseActivity implements AdapterView.OnItem
 	private List<Book> mBooks;
 	
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.book_list);
@@ -93,7 +93,8 @@ public class BookListActivity extends BaseActivity implements AdapterView.OnItem
 
 		List<Book> books = new ArrayList<Book>();
 
-    	String[] projection = new String[]{BibleStore.BookColumns.NAME, BibleStore.BookColumns.TITLE};
+    	String[] projection = new String[] {
+    			BibleStore.BookColumns.NAME, BibleStore.BookColumns.TITLE };
     	Cursor cursor = c.getContentResolver().query(categoryUri, projection, null, null, null);
     	if(cursor != null) {
     		if(cursor.moveToFirst()) {

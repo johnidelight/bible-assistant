@@ -28,19 +28,20 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-/* Bible comment content provider
+/* Bible mark content provider
  * 
  *	Content Uri format:
  *		content://<authority>/<book_name>/<section_name>
  *		For example:
- *			content://org.heavenus.bible.comment/book_god/1.1
- *			content://org.heavenus.bible.comment/book_jesus/2.11
+ *			content://org.heavenus.bible.mark/book_god
+ *			content://org.heavenus.bible.mark/book_god/1.1
+ *			content://org.heavenus.bible.mark/book_jesus/2.11
  *
  *	Section name format: same with definition in Bible content provider.
  */
-public class BibleCommentProvider extends ContentProvider {
-	static final String AUTHORITY = "org.heavenus.bible.comment";
-	static final String MIMETYPE_BASE = "vnd.heavenus.bible.comment";
+public class BibleMarkProvider extends ContentProvider {
+	static final String AUTHORITY = "org.heavenus.bible.mark";
+	static final String MIMETYPE_BASE = "vnd.heavenus.bible.mark";
 	static final Uri CONTENT_URI = Uri.parse(new StringBuilder(
 			ContentResolver.SCHEME_CONTENT).append("://").append(AUTHORITY).toString());
 
@@ -56,7 +57,9 @@ public class BibleCommentProvider extends ContentProvider {
 		URI_MATCHER.addURI(AUTHORITY, "*/*", MATCH_SECTION);
 	}
 	
-	private static final String DATABASE_NAME = "bible_comment.db";
+	private static final String DATABASE_NAME = "bible_mark.db";
+	private static final String TABLE_BOOKMARK = "bookmark";
+
 	private DatabaseHelper mDbHelper;
 
 	@Override
@@ -65,7 +68,7 @@ public class BibleCommentProvider extends ContentProvider {
 
 		switch(URI_MATCHER.match(uri)) {
 		case MATCH_BOOK:
-			mimeType = new StringBuilder(ContentResolver.CURSOR_DIR_BASE_TYPE)
+			mimeType = new StringBuilder(ContentResolver.CURSOR_ITEM_BASE_TYPE)
 					.append('/').append(MIMETYPE_BASE).append(".section").toString();
 			break;
 		case MATCH_SECTION:
@@ -97,10 +100,12 @@ public class BibleCommentProvider extends ContentProvider {
 		case MATCH_BOOK:
 			{
 				String bookName = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK);
-				builder.setTables(bookName); // Book name is the table name.
+				builder.setTables(TABLE_BOOKMARK);
+				builder.appendWhere(new StringBuilder(
+						BibleStore.BookMarkColumns.NAME).append("=\'").append(bookName).append('\'').toString());
 
 				synchronized(mDbHelper) {
-					ensureBookTable(db, bookName);
+					ensureBookMarkTable(db, TABLE_BOOKMARK);
 				}
 			}
 			break;
@@ -113,7 +118,7 @@ public class BibleCommentProvider extends ContentProvider {
 						BibleStore.BookCommentColumns.SECTION).append("=\'").append(section).append('\'').toString());
 
 				synchronized(mDbHelper) {
-					ensureBookTable(db, bookName);
+					ensureBookCommentTable(db, bookName);
 				}
 			}
 			break;
@@ -141,8 +146,18 @@ public class BibleCommentProvider extends ContentProvider {
 		switch(URI_MATCHER.match(uri)) {
 		case MATCH_BOOK:
 			{
-				table = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK); // Book name is the table name.
-				where = selection;
+				table = TABLE_BOOKMARK;
+				String bookName = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK);
+				StringBuilder sb = new StringBuilder(BibleStore.BookMarkColumns.NAME)
+						.append("=\'").append(bookName).append('\'');
+				if(!TextUtils.isEmpty(selection)) {
+					sb.append(" AND (").append(selection).append(')');
+				}
+				where = sb.toString();
+				
+				synchronized(mDbHelper) {
+					ensureBookMarkTable(db, table);
+				}
 			}
 			break;
 		case MATCH_SECTION:
@@ -155,6 +170,10 @@ public class BibleCommentProvider extends ContentProvider {
 					sb.append(" AND (").append(selection).append(')');
 				}
 				where = sb.toString();
+				
+				synchronized(mDbHelper) {
+					ensureBookCommentTable(db, table);
+				}
 			}
 			break;
 		default:
@@ -165,7 +184,6 @@ public class BibleCommentProvider extends ContentProvider {
 		int count = 0;
 		if(table != null) {
 			synchronized(mDbHelper) {
-				ensureBookTable(db, table);
 				count = db.update(table, values, where, selectionArgs);
 			}
 			if (count > 0) {
@@ -178,45 +196,84 @@ public class BibleCommentProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		int matchCode = URI_MATCHER.match(uri);
-		if(matchCode != MATCH_BOOK && matchCode != MATCH_SECTION) {
-			return null;
-		}
-		
-		// Ensure valid section name.
-		String section = values.getAsString(BibleStore.BookCommentColumns.SECTION);
-		if(TextUtils.isEmpty(section)) return null;
-
-		// Check whether current section already exist.
-		String bookName = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK);
-		Uri bookUri = Uri.withAppendedPath(CONTENT_URI, bookName);
-		Uri sectionUri = Uri.withAppendedPath(bookUri, section);
-		boolean sectionExist = false;
-		Cursor c = query(sectionUri, null, null, null, null);
-		if(c != null) {
-			sectionExist = (c.getCount() > 0);
-			c.close();
-		}
-		
-		// Ensure current section name uniquely.
 		Uri newUri = null;
-		if(sectionExist) {
-			if(update(sectionUri, values, null, null) > 0) {
-				newUri = sectionUri;
-			}
-		} else {
-			// Insert new section finally.
-			SQLiteDatabase db = mDbHelper.getWritableDatabase();
-			long rowId = -1;
-			synchronized(mDbHelper) {
-				// Book name is the table name.
-				ensureBookTable(db, bookName);
-				rowId = db.insert(bookName, null, values);
-			}
+		switch(URI_MATCHER.match(uri)) {
+		case MATCH_BOOK:
+			{
+				String bookName = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK);
+				String section = values.getAsString(BibleStore.BookMarkColumns.SECTION);
+				if(section == null) section = "";
+				
+				// Check whether current book mark already exist.
+				boolean bookMarkExist = false;
+				StringBuilder where = new StringBuilder(BibleStore.BookMarkColumns.NAME)
+						.append("=\'").append(bookName).append('\'');
+				Cursor c = query(uri, null, where.toString(), null, null);
+				if(c != null) {
+					bookMarkExist = (c.getCount() > 0);
+					c.close();
+				}
+				
+				// Ensure current book mark uniquely.
+				if(bookMarkExist) {
+					if(update(uri, values, null, null) > 0) {
+						newUri = uri;
+					}
+				} else {
+					// Insert new book mark finally.
+					SQLiteDatabase db = mDbHelper.getWritableDatabase();
+					long rowId = -1;
+					synchronized(mDbHelper) {
+						ensureBookMarkTable(db, TABLE_BOOKMARK);
+						rowId = db.insert(TABLE_BOOKMARK, null, values);
+					}
 
-			if(rowId != -1) {
-				newUri = sectionUri;
+					if(rowId != -1) {
+						newUri = uri;
+					}
+				}
 			}
+			break;
+		case MATCH_SECTION:
+			{
+				// Ensure valid section name.
+				String section = values.getAsString(BibleStore.BookCommentColumns.SECTION);
+				if(!TextUtils.isEmpty(section)) {
+					// Check whether current section already exist.
+					String bookName = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK);
+					Uri bookUri = Uri.withAppendedPath(CONTENT_URI, bookName);
+					Uri sectionUri = Uri.withAppendedPath(bookUri, section);
+					boolean sectionExist = false;
+					Cursor c = query(sectionUri, null, null, null, null);
+					if(c != null) {
+						sectionExist = (c.getCount() > 0);
+						c.close();
+					}
+					
+					// Ensure current section name uniquely.
+					if(sectionExist) {
+						if(update(sectionUri, values, null, null) > 0) {
+							newUri = sectionUri;
+						}
+					} else {
+						// Insert new section finally.
+						SQLiteDatabase db = mDbHelper.getWritableDatabase();
+						long rowId = -1;
+						synchronized(mDbHelper) {
+							// Book name is the table name.
+							ensureBookCommentTable(db, bookName);
+							rowId = db.insert(bookName, null, values);
+						}
+
+						if(rowId != -1) {
+							newUri = sectionUri;
+						}
+					}
+				}
+			}
+			break;
+		default:
+			break;
 		}
 
         return newUri;
@@ -233,8 +290,18 @@ public class BibleCommentProvider extends ContentProvider {
 		switch(URI_MATCHER.match(uri)) {
 		case MATCH_BOOK:
 			{
-				table = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK); // Book name is the table name.
-				where = selection;
+				table = TABLE_BOOKMARK;
+				String bookName = uri.getPathSegments().get(URI_SEGMENT_INDEX_BOOK);
+				StringBuilder sb = new StringBuilder(BibleStore.BookMarkColumns.NAME)
+						.append("=\'").append(bookName).append('\'');
+				if(!TextUtils.isEmpty(selection)) {
+					sb.append(" AND (").append(selection).append(')');
+				}
+				where = sb.toString();
+				
+				synchronized(mDbHelper) {
+					ensureBookMarkTable(db, table);
+				}
 			}
 			break;
 		case MATCH_SECTION:
@@ -247,6 +314,10 @@ public class BibleCommentProvider extends ContentProvider {
 					sb.append(" AND (").append(selection).append(')');
 				}
 				where = sb.toString();
+				
+				synchronized(mDbHelper) {
+					ensureBookCommentTable(db, table);
+				}
 			}
 			break;
 		default:
@@ -257,7 +328,6 @@ public class BibleCommentProvider extends ContentProvider {
 		int count = 0;
 		if(table != null) {
 			synchronized(mDbHelper) {
-				ensureBookTable(db, table);
 				count = db.delete(table, where, selectionArgs);
 			}
 			if (count > 0) {
@@ -267,8 +337,18 @@ public class BibleCommentProvider extends ContentProvider {
 
         return count;
 	}
-	
-	private void ensureBookTable(SQLiteDatabase db, String table) {
+
+	private void ensureBookMarkTable(SQLiteDatabase db, String table) {
+		if(db == null || TextUtils.isEmpty(table)) return;
+
+		db.execSQL(new StringBuilder("CREATE TABLE IF NOT EXISTS ").append(table).append(" (")
+				.append(BibleStore.BookMarkColumns._ID).append(" INTEGER PRIMARY KEY,")
+				.append(BibleStore.BookMarkColumns.NAME).append(" TEXT,")
+				.append(BibleStore.BookMarkColumns.SECTION).append(" TEXT")
+				.append(");").toString());
+	}
+
+	private void ensureBookCommentTable(SQLiteDatabase db, String table) {
 		if(db == null || TextUtils.isEmpty(table)) return;
 
 		db.execSQL(new StringBuilder("CREATE TABLE IF NOT EXISTS ").append(table).append(" (")

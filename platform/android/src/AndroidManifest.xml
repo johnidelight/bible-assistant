@@ -16,8 +16,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.heavenus.bible.assistant"
-	android:versionCode="2"
-	android:versionName="0.1.1">
+	android:versionCode="3"
+	android:versionName="0.1.2">
 
     <uses-sdk android:minSdkVersion="4" />
 
@@ -65,8 +65,8 @@
 			android:authorities="org.heavenus.bible"
 			/>
 			
-		<provider android:name="org.heavenus.bible.provider.BibleCommentProvider"
-			android:authorities="org.heavenus.bible.comment"
+		<provider android:name="org.heavenus.bible.provider.BibleMarkProvider"
+			android:authorities="org.heavenus.bible.mark"
 			/>
 
     </application>
