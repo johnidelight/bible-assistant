@@ -104,19 +104,19 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 			if(!enabled) return;
 		}
 
-		// Generate comment uri for current section.
+		// Get section info.
 		Section s = mSections.get(position);
-		Uri commentUri = Uri.withAppendedPath(BibleStore.BIBLE_MARK_CONTENT_URI, BibleStore.getBookName(mBookUri));
-		commentUri = Uri.withAppendedPath(commentUri, s.name);
-		
-		// Show current section comment.
-		Intent it = new Intent(Intent.ACTION_VIEW, commentUri, this, CommentActivity.class);
-		it.putExtra(CommentActivity.EXTRA_BOOK_TITLE, mBookTitle);
+		Uri sectionUri = Uri.withAppendedPath(mBookUri, s.name);
+
 		CharSequence sectionText = ((TextView) view).getText();
 		if(!s.isMainTitle && !s.isChapterTitle) {
 			String chapter = getResources().getString(R.string.section_chapter, s.chapterId, ""); // FIXME: lost chapter title
 			sectionText = new StringBuilder().append(chapter).append('\n').append(sectionText);
 		}
+
+		// Show current section comment.
+		Intent it = new Intent(Intent.ACTION_VIEW, sectionUri, this, CommentActivity.class);
+		it.putExtra(CommentActivity.EXTRA_BOOK_TITLE, mBookTitle);
 		it.putExtra(CommentActivity.EXTRA_SECTION_CONTENT, sectionText);
 		startActivity(it);
 	}
@@ -143,6 +143,8 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
     		if(cursor.moveToFirst()) {
     			section = cursor.getString(cursor.getColumnIndex(BibleStore.BookMarkColumns.SECTION));
     		}
+    		
+    		cursor.close();
 		}
 		
 		return section;
