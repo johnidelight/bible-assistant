@@ -22,9 +22,11 @@ import java.util.List;
 import org.heavenus.bible.provider.BibleStore;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -56,8 +58,10 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 	private String mBookTitle;
 	private String mBookMarkSection;
 	private int mBookMarkSectionPos = -1;
+
 	private List<Section> mSections;
-	
+	private SectionAdapter mSectionAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,33 +69,47 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
         setContentView(R.layout.book_content);
         mSectionListView = (ListView) findViewById(R.id.section_list);
         
+        
+        
         initFromIntent();
         
         setTitle(mBookTitle);
         
         // Get current book mark.
 		mBookMarkSection = getBookMarkSection(mBookUri);
-		
-        // Get current book content.
+        
+		// Get current book content.
         mSections = getBookSections(mBookUri);
-		if(mSections != null) {
-			mSectionListView.setAdapter(mSectionAdapter);
-			mSectionListView.setOnItemClickListener(this);
-			
-			// Scroll to the current book mark section.
-			mSectionListView.setSelectionAfterHeaderView();
-			mSectionListView.setSelection(mBookMarkSectionPos);
-		}
+        if(mSections != null) {
+        	mSectionAdapter = new SectionAdapter(this, mSections);
+        	mSectionListView.setAdapter(mSectionAdapter);
+            mSectionListView.setOnItemClickListener(this);
+
+            // Scroll to the current book mark section.
+            mSectionListView.setSelectionAfterHeaderView();
+            mSectionListView.setSelection(mBookMarkSectionPos);
+        }
     }
+    
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		if(mSectionAdapter != null) {
+			mSectionAdapter.notifyDataSetChanged();
+		}
+	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStop() {
+		super.onStop();
 
 		// Save the current reading section to book mark.
 		mBookMarkSectionPos = mSectionListView.getFirstVisiblePosition();
-		Section s = (Section) mSectionAdapter.getItem(mBookMarkSectionPos);
-		saveBookMarkSection(mBookUri, s.name);
+		if(mSections != null) {
+			Section s = mSections.get(mBookMarkSectionPos);
+			saveBookMarkSection(mBookUri, s.name);
+		}
 	}
 
 	@Override
@@ -220,7 +238,15 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 		return sections;
 	}
 
-	private BaseAdapter mSectionAdapter = new BaseAdapter() {
+	private class SectionAdapter extends BaseAdapter {
+		private Context mContext;
+		private List<Section> mSections;
+		
+		public SectionAdapter(Context context, List<Section> sections) {
+			mContext = context;
+			mSections = sections;
+		}
+
 		@Override
 		public int getCount() {
 			return mSections.size();
@@ -245,21 +271,29 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 			CharSequence text = null;
 			if(s.isMainTitle) {
 				text = s.content;
-				view = View.inflate(BookContentActivity.this, R.layout.section_main_title, null);
+				view = View.inflate(mContext, R.layout.section_main_title, null);
 			} else if(s.isChapterTitle) {
 				text = s.content;
-				view = View.inflate(BookContentActivity.this, R.layout.section_chapter_title, null);
+				view = View.inflate(mContext, R.layout.section_chapter_title, null);
 			} else if(s.isTitle) {
 				text = s.content;
-				view = View.inflate(BookContentActivity.this, R.layout.section_part_title, null);
+				view = View.inflate(mContext, R.layout.section_part_title, null);
 			} else { // Main body
 				text = getResources().getString(R.string.section_main_body, s.sectionId, s.content);
-				view = View.inflate(BookContentActivity.this, R.layout.section_main_body, null);
+				view = View.inflate(mContext, R.layout.section_main_body, null);
 			}
 			
 			TextView tv = (TextView) view.findViewById(android.R.id.text1);
 			if(tv != null) {
 				tv.setText(text);
+
+				// Show indicator for sections with comments.
+				Uri sectionUri = Uri.withAppendedPath(mBookUri, s.name);
+				String comment = CommentActivity.getComment(mContext, sectionUri);
+				if(!TextUtils.isEmpty(comment)) {
+					Drawable indicator = mContext.getResources().getDrawable(R.drawable.bookmark4);
+					tv.setCompoundDrawablesWithIntrinsicBounds(null, null, indicator, null);
+				}
 			}
 
 			return view;
