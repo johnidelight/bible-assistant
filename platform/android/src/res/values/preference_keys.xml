@@ -18,7 +18,7 @@
 <resources>
 
 	<!-- Whether enable comment mode. -->
-	<string name="key_comment_enable_comment">enable_comment</string>
+	<string name="key_comment_enable_comment" translatable="false">enable_comment</string>
 	<bool name="default_value_comment_enable_comment">true</bool>
 
 </resources>

@@ -31,7 +31,7 @@ import android.widget.TextView;
 /*
  * Base activity to supply common behaviors such as option menus, etc.
  */
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -56,7 +56,7 @@ public class BaseActivity extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				CharSequence title = new StringBuilder(getResources().getString(R.string.about))
 						.append(' ') .append(getResources().getString(R.string.app_name));
-				builder.setTitle(title).setIcon(R.drawable.icon).setView(getAboutView())
+				builder.setTitle(title).setIcon(R.drawable.bookmark1).setView(getAboutView())
 						.create().show();
 			}
 			return true;

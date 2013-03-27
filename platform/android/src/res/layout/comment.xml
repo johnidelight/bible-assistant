@@ -58,6 +58,7 @@
 	    android:textColor="@android:color/black"
 	    android:gravity="left|top"
 	    android:singleLine="false"
+	    android:inputType="text"
 	    />
 
 </LinearLayout>
