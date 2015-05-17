@@ -1,0 +1,1 @@
+copy zh_CN\bible\bible.db ..\platform\android\src\libs\armeabi\libbible_zh_CN.so

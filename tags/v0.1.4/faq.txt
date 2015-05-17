@@ -1,0 +1,22 @@
+***************************************************************
+1.Development environment:
+JDK6
+Android SDK (requires platforms/android-4; add tools, platform-tools to path)
+Ant 1.8 (add ant bin to path)
+Eclipse (optional for command line mode)
+
+***************************************************************
+2.Building issue:
+Unable to locate tools.jar. Expected to find it in C:\Program Files\Java\jre6\lib\tools.jar
+
+Solution: 
+copy all files in corresponding JDK lib to JRE lib
+
+***************************************************************
+3.Building issue:
+I:\sdk\android-sdk-windows\tools\ant\build.xml:710: The following error occurred while executing this line:
+I:\sdk\android-sdk-windows\tools\ant\build.xml:723: Error running javac.exe compiler
+
+Solution:
+copy all files in corresponding JDK bin to JRE bin
+***************************************************************
