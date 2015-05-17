@@ -1,1 +1,1 @@
-android update project --name BibleAssistant --path ..\platform\android\src
+android update project -n BibleAssistant -p ..\platform\android\src
