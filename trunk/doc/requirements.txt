@@ -25,30 +25,38 @@ BibleAssistant v0.1.3
 
 BibleAssistant v0.1.4
 ---------------------
-* review bible content(Chinese Simplied version), correct content errors.
+* complete all book content.
 
 
 BibleAssistant v0.1.5
+---------------------
+* adjust section foramt to be more friendly.
+
+
+BibleAssistant v0.1.6
+---------------------
+* review bible content(Chinese Simplied version), correct content errors.
+
+
+BibleAssistant v0.1.7
 ---------------------
 * support word searching.
 * bookmark manager: save/restore
 * add context menu for every section words: copy; set as new message content; etc.
 
 
-
-BibleAssistant v0.1.6
+BibleAssistant v0.1.8
 ---------------------
 * add app widget: Random Word.
 * support voice reading section words.
 
 
-
-BibleAssistant v0.1.7
+BibleAssistant v0.1.9
 ---------------------
 * add app widget: Daily Word
 
 
-
 More future versions:
 * add more Bible language content: English, etc.
-* supply settings to view and choose different Bible languages.
+* supply settings for language switching.
+
