@@ -3,8 +3,9 @@
 
 = Introduction =
 
-BibleAssistant v0.1.4 has been released.
-
+BibleAssistant v0.1.4 has been released:
+* completed all books content.
+* all content will be reviewed and corrected in next release. 
 
 = Details =
 
