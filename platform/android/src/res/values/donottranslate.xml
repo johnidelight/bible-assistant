@@ -19,6 +19,6 @@
 	<!-- Belows are author infos, no need localization.-->
 	<string name="author_email">johnidelight@gmail.com</string>
 	<string name="author_homepage">http://www.heavenus.org</string>
-	<string name="author_copyright">Copyright © 2011-2013 Heavenus.org</string>
+	<string name="author_copyright">Copyright © 2011-2015 Heavenus.org</string>
 
 </resources>
