@@ -14,7 +14,7 @@ https://drive.google.com/open?id=0B6KC2RnYfdaYfjR2eXVQT0dQWVJ3VXZzWHFQdkRNUko4VG
 Changes:
 1. adjusted section format to cover all section cases;
 2. added section name in UI content view;
-3. this is the first key version for Chinese Simplied Bible content.
+3. this is the first key version for Chinese Simplified Bible content.
 
 Notes:
 1. all content will be reviewed and corrected in next release.
