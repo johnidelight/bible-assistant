@@ -34,8 +34,8 @@ import android.text.TextUtils;
  *		content://<authority>/<book_name>/<section_name>
  *		For example:
  *			content://org.heavenus.bible.mark/book_god
- *			content://org.heavenus.bible.mark/book_god/1.1
- *			content://org.heavenus.bible.mark/book_jesus/2.11
+ *			content://org.heavenus.bible.mark/book_god/1:1
+ *			content://org.heavenus.bible.mark/book_jesus/2:11
  *
  *	Section name format: same with definition in Bible content provider.
  */

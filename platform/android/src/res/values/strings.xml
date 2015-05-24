@@ -17,9 +17,6 @@
 <resources>
     <string name="app_name">BibleAssistant</string>
 
-    <string name="section_chapter">Chapter%1$s %2$s</string>
-    <string name="section_main_body">%1$d. %2$s</string>
-
     <string name="comment">Comment:</string>
     <string name="enable_comment">Enable comment</string>
     
