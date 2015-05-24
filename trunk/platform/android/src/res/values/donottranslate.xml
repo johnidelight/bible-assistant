@@ -20,5 +20,7 @@
 	<string name="author_email">johnidelight@gmail.com</string>
 	<string name="author_homepage">http://www.heavenus.org</string>
 	<string name="author_copyright">Copyright © 2011-2015 Heavenus.org</string>
+	
+	<string name="section_main_body">%1$s %2$s</string>
 
 </resources>

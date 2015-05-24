@@ -25,7 +25,7 @@ public class BibleStore {
 	public static final Uri BIBLE_CONTENT_URI = BibleProvider.CONTENT_URI;
 	public static final Uri BIBLE_MARK_CONTENT_URI = BibleMarkProvider.CONTENT_URI;
 	
-	public static final String SECTION_NAME_REGEX = "\\d+[a-z]?.-?\\d+t?";
+	public static final String SECTION_NAME_REGEX = "\\d+[a-z]?:-?\\d+x*t*";
 
 	public static final class LocaleColumns implements BaseColumns {
 		/* The bible locale name.

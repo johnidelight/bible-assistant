@@ -40,24 +40,27 @@ import android.net.Uri;
  *	Content Uri format:
  *		content://<authority>/<locale_name>/<category_id>/<book_name>/<section_name>
  *		For example:
- *			content://org.heavenus.bible/en_US/1/book_god/1.1
- *			content://org.heavenus.bible/zh_CN/2/book_jesus/2.11
+ *			content://org.heavenus.bible/en_US/1/book_god/1:1
+ *			content://org.heavenus.bible/zh_CN/2/book_jesus/2:11
  * 
  *	Section name format:
- *		chapter_number[appendix_letter].section_number[t]
+ *		chapter_number[appendix_letter]:section_number[x][t]
  *		(1) chapter_number:  >=0
  *		(2) appendix_letter: [a-z]
- *		(3) dot
+ *		(3) :
  *		(4) section_number: positive or negative
- *		(5) t: title if present; otherwise body
+ *		(5) x: alternative section if present; multiple x is allowed to distinguish different alternatives
+ *		(6) t: title if present; otherwise body; multiple t is allowed to distinguish different title levels
 
  *		Examples:
- *		(1) Main title section: 1.-1t
- *		(2) Chapter title section: 1.0t
- *		(3) Part title section: 1.1t
- *		(4) Main body section: 1.1
- *		(5) Appendix title section: 1a.0t
- *		(6) Appendix body section: 1a.1
+ *		(1) Main title section: 1:-1t
+ *		(2) Chapter title section: 1:0t
+ *		(3) Part title section: 1:1t
+ *		(4) Main body section: 1:1
+ *		(5) Appendix title section: 1a:0t
+ *		(6) Appendix body section: 1a:1
+ *		(7) alternative body section: 1:1x
+ *		(8) different title levels: 1:1tt
  */
 public class BibleProvider extends ContentProvider {
 	static final String AUTHORITY = "org.heavenus.bible";

@@ -46,9 +46,6 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 	private class Section {
 		public String name;
 		public String content;
-		
-		public String chapterId;
-		public int sectionId;
 
 		public boolean isTitle;
 		public boolean isMainTitle;
@@ -68,9 +65,7 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
         
         setContentView(R.layout.book_content);
         mSectionListView = (ListView) findViewById(R.id.section_list);
-        
-        
-        
+
         initFromIntent();
         
         setTitle(mBookTitle);
@@ -125,12 +120,7 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 		// Get section info.
 		Section s = mSections.get(position);
 		Uri sectionUri = Uri.withAppendedPath(mBookUri, s.name);
-
 		CharSequence sectionText = ((TextView) view).getText();
-		if(!s.isMainTitle && !s.isChapterTitle) {
-			String chapter = getResources().getString(R.string.section_chapter, s.chapterId, ""); // FIXME: lost chapter title
-			sectionText = new StringBuilder().append(chapter).append('\n').append(sectionText);
-		}
 
 		// Show current section comment.
 		Intent it = new Intent(Intent.ACTION_VIEW, sectionUri, this, CommentActivity.class);
@@ -198,26 +188,49 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
     					s.content = "";
     				}
 
-    				// Get section details according to section name.
-    				if(!TextUtils.isEmpty(s.name)) {
-    					int index1 = s.name.indexOf('.');
+    				// Parse section name to get details.
+    				boolean visableSectionName = true;
+    				if(!TextUtils.isEmpty(s.name) && s.name.matches(BibleStore.SECTION_NAME_REGEX)) {
     					try {
-    						s.chapterId = s.name.substring(0, index1);
-    					} catch(Exception e) {}
+    						// chapter
+    						int index = s.name.indexOf(':');
+    						String chapter = s.name.substring(0, index);
+    						char end = chapter.charAt(chapter.length() - 1);
+    						if (end >= 'a' && end <= 'z') { // 1a
+    							visableSectionName = false;
+    						}
 
-    					try {
-    						int index2 = s.name.indexOf('t');
-    						if(index2 != -1) {
+    						// sentence
+    						String sentence = s.name.substring(index + 1);
+    						index = sentence.indexOf('t');
+    						if(index != -1) { // 1tt
     							s.isTitle = true;
-    							s.sectionId = Integer.parseInt(s.name.substring(index1 + 1, index2));
-    							s.isMainTitle = (s.sectionId < 0);
-    							s.isChapterTitle = (s.sectionId == 0);
-    						} else {
-    							s.sectionId = Integer.parseInt(s.name.substring(index1 + 1));
+    							visableSectionName = false;
+
+    							int sentenceId = Integer.parseInt(sentence.substring(0, index));
+    							s.isMainTitle = (sentenceId < 0); // -1t
+    							s.isChapterTitle = (sentenceId == 0); // 0t
+    						} else { // body
+    							end = sentence.charAt(sentence.length() - 1);
+    							if (end >= 'a' && end <= 'z') { // 1x
+    								visableSectionName = false;
+    							} else {
+    								int sentenceId = Integer.parseInt(sentence);
+    								if (sentenceId <= 0) {
+    									visableSectionName = false;
+    								}
+    							}
     						}
     					} catch(Exception e) {}
+    				} else {
+    					visableSectionName = false;
     				}
-    				
+
+    				// Prefix section content with friendly section name.
+    				if(visableSectionName) {
+    					s.content = getResources().getString(R.string.section_main_body, s.name, s.content);
+    				}
+
     				// Check whether current section is the book mark section.
     				if(mBookMarkSectionPos <= 0) {
 	    				if(!TextUtils.isEmpty(mBookMarkSection)) {
@@ -268,18 +281,14 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 			
 			// Format sections content using different layouts.
 			Section s = mSections.get(position);
-			CharSequence text = null;
+			CharSequence text = s.content;
 			if(s.isMainTitle) {
-				text = s.content;
 				view = View.inflate(mContext, R.layout.section_main_title, null);
 			} else if(s.isChapterTitle) {
-				text = s.content;
 				view = View.inflate(mContext, R.layout.section_chapter_title, null);
 			} else if(s.isTitle) {
-				text = s.content;
 				view = View.inflate(mContext, R.layout.section_part_title, null);
 			} else { // Main body
-				text = getResources().getString(R.string.section_main_body, s.sectionId, s.content);
 				view = View.inflate(mContext, R.layout.section_main_body, null);
 			}
 			
