@@ -1,9 +1,9 @@
-#summary BibleAssistant v0.1.4
+#summary BibleAssistant v0.1.5
 #labels Bible,Book,Dictionary,Android,Featured
 
 = Introduction =
 
-BibleAssistant v0.1.4 has been released.
+BibleAssistant v0.1.5 has been released.
 
 = Details =
 
@@ -12,7 +12,9 @@ Welcome to download it. God bless you!
 https://drive.google.com/open?id=0B6KC2RnYfdaYfjR2eXVQT0dQWVJ3VXZzWHFQdkRNUko4VGdyM1F3dFZ3UE5EazF0dng4cUU&authuser=0
 
 Changes:
-1. completed all books content.
+1. adjust section format to cover all section cases;
+2. added section name in UI content view;
+3. first key version for Chinese specified Bible content.completed all books content.
 
 Notes:
-1. all content will be reviewed and corrected in next release. 
+1. all content will be reviewed and corrected in next release.
