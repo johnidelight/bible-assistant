@@ -17,8 +17,8 @@
 <!-- This contains all preference keys, no need localization.-->
 <resources>
 
-	<!-- Whether enable comment mode. -->
-	<string name="key_comment_enable_comment" translatable="false">enable_comment</string>
-	<bool name="default_value_comment_enable_comment">true</bool>
+	<!-- Whether enable direct comment mode. -->
+	<string name="key_comment_enable_direct_comment" translatable="false">enable_direct_comment</string>
+	<bool name="default_value_comment_enable_direct_comment">false</bool>
 
 </resources>

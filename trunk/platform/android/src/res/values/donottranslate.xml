@@ -22,5 +22,6 @@
 	<string name="author_copyright">Copyright © 2011-2015 Heavenus.org</string>
 	
 	<string name="section_main_body">%1$s %2$s</string>
+	<string name="section_content_for_share">%1$s [%2$s]</string>
 
 </resources>

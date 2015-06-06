@@ -30,13 +30,20 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.ClipboardManager;
 import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BookContentActivity extends BaseActivity implements ListView.OnItemClickListener {
 	static final String EXTRA_BOOK_TITLE = "org.heavenus.bible.assistant.intent.extra.BOOK_TITLE"; // String
@@ -65,6 +72,7 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
         
         setContentView(R.layout.book_content);
         mSectionListView = (ListView) findViewById(R.id.section_list);
+        registerForContextMenu(mSectionListView);
 
         initFromIntent();
         
@@ -108,25 +116,62 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 	}
 
 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.section_menu, menu);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    switch(item.getItemId()) {
+	        case R.id.copy:
+	        	copySectionContent(info.position);
+	            return true;
+	        case R.id.add_comments:
+	        	startCommentActivity(info.position);
+	            return true;
+	        default:
+	            return super.onContextItemSelected(item);
+	    }
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// Not show comment if comment mode is disabled.
+		// Not show comment if direct comment mode is disabled.
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		if(pref != null) {
-			boolean enabled = pref.getBoolean(getResources().getString(R.string.key_comment_enable_comment),
-					getResources().getBoolean(R.bool.default_value_comment_enable_comment));
+			boolean enabled = pref.getBoolean(getResources().getString(R.string.key_comment_enable_direct_comment),
+					getResources().getBoolean(R.bool.default_value_comment_enable_direct_comment));
 			if(!enabled) return;
 		}
 
+		startCommentActivity(position);
+	}
+	
+	private void startCommentActivity(int sectionPosition) {
 		// Get section info.
-		Section s = mSections.get(position);
+		Section s = mSections.get(sectionPosition);
 		Uri sectionUri = Uri.withAppendedPath(mBookUri, s.name);
-		CharSequence sectionText = ((TextView) view).getText();
+		CharSequence sectionText = s.content;
 
 		// Show current section comment.
 		Intent it = new Intent(Intent.ACTION_VIEW, sectionUri, this, CommentActivity.class);
 		it.putExtra(CommentActivity.EXTRA_BOOK_TITLE, mBookTitle);
 		it.putExtra(CommentActivity.EXTRA_SECTION_CONTENT, sectionText);
 		startActivity(it);
+	}
+	
+	private void copySectionContent(int sectionPosition) {
+    	Section s = mSections.get(sectionPosition);
+    	String content = getResources().getString(R.string.section_content_for_share, s.content, mBookTitle);
+
+    	ClipboardManager board = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+    	board.setText(content);
+    	if (board.hasText()) {
+    		Toast.makeText(this, R.string.copied, Toast.LENGTH_LONG).show();
+    	}
 	}
 	
 	private void initFromIntent() {
@@ -307,5 +352,5 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 
 			return view;
 		}
-	};
+	}
 }
