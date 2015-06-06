@@ -18,8 +18,13 @@
     <string name="app_name">BibleAssistant</string>
 
     <string name="comment">Comment:</string>
-    <string name="enable_comment">Enable comment</string>
+    <string name="enable_direct_comment">Click text to add comments</string>
     
     <string name="setting">Settings</string>
     <string name="about">About</string>
+    
+    <string name="copy">Copy</string>
+    <string name="add_comments">Comments</string>
+    
+    <string name="copied">Copied</string>
 </resources>

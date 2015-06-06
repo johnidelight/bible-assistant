@@ -18,8 +18,13 @@
     <string name="app_name">圣经助手</string>
 
     <string name="comment">感想：</string>
-    <string name="enable_comment">启用感想</string>
+    <string name="enable_direct_comment">点击段落 添加感想</string>
     
     <string name="setting">设置</string>
     <string name="about">关于</string>
+    
+    <string name="copy">复制</string>
+    <string name="add_comments">感想</string>
+    
+    <string name="copied">已复制</string>
 </resources>

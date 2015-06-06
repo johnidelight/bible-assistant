@@ -19,9 +19,9 @@
 	<PreferenceCategory android:title="@string/comment">
 
         <CheckBoxPreference
-        	android:key="@string/key_comment_enable_comment"
-			android:title="@string/enable_comment"
-			android:defaultValue="@bool/default_value_comment_enable_comment"
+        	android:key="@string/key_comment_enable_direct_comment"
+			android:title="@string/enable_direct_comment"
+			android:defaultValue="@bool/default_value_comment_enable_direct_comment"
 			/>
 
     </PreferenceCategory>
