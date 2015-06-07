@@ -1,0 +1,76 @@
+BibleAssistant v0.1.0
+---------------------
+* show Bible content: category list -> book list -> section list.
+* add Bible language: Chinese Simplied.
+* allow user to view and add comment for every section words.
+* supply settings to enable/disable comment mode.
+
+
+BibleAssistant v0.1.1
+---------------------
+* complete Bible content(Chinese Simplied version) - New Testament (need review).
+* show fast scrolling thumb in content list.
+
+
+BibleAssistant v0.1.2
+---------------------
+* complete Bible content(Chinese Simplied version)  - Old Testament (need review).
+
+
+BibleAssistant v0.1.3
+---------------------
+* save every book reading position.
+* show icon for section item which has comments.
+
+
+BibleAssistant v0.1.4
+---------------------
+* complete all book content.
+
+
+BibleAssistant v0.1.5
+---------------------
+* adjust section foramt to be more friendly.
+
+
+BibleAssistant v0.1.6
+---------------------
+* add context menu for every section words: copy; comments; etc.
+* support short book title.
+
+
+BibleAssistant v0.1.7
+---------------------
+* support word searching.
+
+
+BibleAssistant v0.1.8
+---------------------
+* chapter manager: view all chapters.
+* bookmark manager: view all bookmarks;
+
+
+BibleAssistant v0.1.9
+---------------------
+* review bible content(Chinese Simplied version), correct content errors.
+
+
+BibleAssistant v0.1.10
+---------------------
+* add app widget: Random Word.
+
+
+BibleAssistant v0.1.11
+---------------------
+* add app widget: Daily Word
+
+
+BibleAssistant v0.1.12
+---------------------
+* support voice reading section words.
+
+
+More future versions:
+* add more Bible language content: English, etc.
+* supply settings for language switching.
+

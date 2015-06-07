@@ -1,0 +1,1 @@
+ant clean -f ..\platform\android\src\build.xml
