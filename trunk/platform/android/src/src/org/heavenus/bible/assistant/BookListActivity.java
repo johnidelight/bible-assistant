@@ -39,6 +39,7 @@ public class BookListActivity extends BaseActivity implements AdapterView.OnItem
 	private class Book {
 		public String name;
 		public String title;
+		public String titleShort;
 	}
 	private Uri mCategoryUri;
 	private String mCategoryTitle;
@@ -77,6 +78,7 @@ public class BookListActivity extends BaseActivity implements AdapterView.OnItem
 		// Show current book content.
 		Intent it = new Intent(Intent.ACTION_VIEW, bookUri, this, BookContentActivity.class);
 		it.putExtra(BookContentActivity.EXTRA_BOOK_TITLE, book.title);
+		it.putExtra(BookContentActivity.EXTRA_BOOK_TITLE_SHORT, book.titleShort);
 		startActivity(it);
 	}
 
@@ -94,7 +96,7 @@ public class BookListActivity extends BaseActivity implements AdapterView.OnItem
 		List<Book> books = new ArrayList<Book>();
 
     	String[] projection = new String[] {
-    			BibleStore.BookColumns.NAME, BibleStore.BookColumns.TITLE };
+    			BibleStore.BookColumns.NAME, BibleStore.BookColumns.TITLE, BibleStore.BookColumns.TITLE_SHORT };
     	Cursor cursor = c.getContentResolver().query(categoryUri, projection, null, null, null);
     	if(cursor != null) {
     		if(cursor.moveToFirst()) {
@@ -102,6 +104,7 @@ public class BookListActivity extends BaseActivity implements AdapterView.OnItem
     				Book book = new Book();
     				book.name = cursor.getString(cursor.getColumnIndex(BibleStore.BookColumns.NAME));
     				book.title = cursor.getString(cursor.getColumnIndex(BibleStore.BookColumns.TITLE));
+    				book.titleShort = cursor.getString(cursor.getColumnIndex(BibleStore.BookColumns.TITLE_SHORT));
 
     				books.add(book);
     			} while(cursor.moveToNext());

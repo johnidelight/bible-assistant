@@ -42,6 +42,11 @@ public class BibleStore {
 	}
 	
 	public static final class BookColumns implements BaseColumns {
+		/* The category id of the book.
+		 * Type: INTEGER
+		 */
+		public static final String CATEGORY_ID = "category_id";
+
 		/* The book name.
 		 * Type: TEXT
 		 */
@@ -51,11 +56,11 @@ public class BibleStore {
 		 * Type: TEXT
 		 */
 		public static final String TITLE = "title";
-		
-		/* The category id of the book.
-		 * Type: INTEGER
+
+		/* The short book title.
+		 * Type: TEXT
 		 */
-		public static final String CATEGORY_ID = "category_id";
+		public static final String TITLE_SHORT = "title_short";
 	}
 	
 	public static final class BookContentColumns implements BaseColumns {
@@ -74,12 +79,17 @@ public class BibleStore {
 		/* The book name.
 		 * Type: TEXT
 		 */
-		public static final String NAME = "name";
+		public static final String BOOK_NAME = "book_name";
 		
-		/* The current reading section of the book.
+		/* The current reading section id of the book.
+		 * Type: INTEGER
+		 */
+		public static final String SECTION_ID = "section_id";
+		
+		/* The current reading section name of the book.
 		 * Type: TEXT
 		 */
-		public static final String SECTION = "section";
+		public static final String SECTION_NAME = "section_name";
 	}
 
 	public static final class BookCommentColumns implements BaseColumns {
@@ -107,8 +117,8 @@ public class BibleStore {
 			}
 		} else if(BibleMarkProvider.AUTHORITY.equals(authority)) {
 			List<String> segs = uri.getPathSegments();
-			if(segs.size() > BibleMarkProvider.URI_SEGMENT_INDEX_BOOK) {
-				bookName = segs.get(BibleMarkProvider.URI_SEGMENT_INDEX_BOOK);
+			if(segs.size() > BibleMarkProvider.URI_SEGMENT_INDEX_BOOK_NAME) {
+				bookName = segs.get(BibleMarkProvider.URI_SEGMENT_INDEX_BOOK_NAME);
 			}
 		}
 		
@@ -128,8 +138,8 @@ public class BibleStore {
 			}
 		} else if(BibleMarkProvider.AUTHORITY.equals(authority)) {
 			List<String> segs = uri.getPathSegments();
-			if(segs.size() > BibleMarkProvider.URI_SEGMENT_INDEX_SECTION) {
-				sectionName = segs.get(BibleMarkProvider.URI_SEGMENT_INDEX_SECTION);
+			if(segs.size() > BibleMarkProvider.URI_SEGMENT_INDEX_SECTION_NAME) {
+				sectionName = segs.get(BibleMarkProvider.URI_SEGMENT_INDEX_SECTION_NAME);
 			}
 		}
 		
