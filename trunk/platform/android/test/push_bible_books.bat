@@ -1,1 +1,0 @@
-adb push bible /sdcard/bible
