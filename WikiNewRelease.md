@@ -1,0 +1,16 @@
+# Introduction #
+
+BibleAssistant v0.1.6 has been released.
+
+# Details #
+
+Welcome to download it. God bless you!
+
+https://drive.google.com/open?id=0B6KC2RnYfdaYfjR2eXVQT0dQWVJ3VXZzWHFQdkRNUko4VGdyM1F3dFZ3UE5EazF0dng4cUU&authuser=0
+
+Changes:
+1. add context menu for every section words: copy; comments; etc.
+2. support short book title for sharing.
+
+Notes:
+1. all content will be reviewed and corrected in future release.
