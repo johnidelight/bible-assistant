@@ -17,9 +17,9 @@
 package org.heavenus.bible.provider;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -87,7 +87,8 @@ public class BibleProvider extends ContentProvider {
 		URI_MATCHER.addURI(AUTHORITY, "*/#/*/*", MATCH_SECTION);
 	}
 
-	private static final String DATABASE_PATH = "/lib/libbible_*.so";
+	private static final String DATABASE_DIR = "lib";
+	private static final String DATABASE_PATTERN = "libbible_\\S+.so";
 	private static final String TABLE_CATEGORY = "categories";
 	private static final String TABLE_BOOK = "books";
 
@@ -208,19 +209,35 @@ public class BibleProvider extends ContentProvider {
 		return 0;
 	}
 	
+	private class DatabaseFilter implements FilenameFilter {
+		@Override
+		public boolean accept(File dir, String filename) {
+			if (filename != null && filename.matches(DATABASE_PATTERN))
+				return true;
+
+			return false;
+		}
+	}
+	
 	private synchronized Map<String, String> getDatabases(Context c) {
 		if(mDatabases == null) {
 			mDatabases = new HashMap<String, String>();
 			
-			// Find all available locale databases.
-			String pathPattern = new StringBuilder(c.getFilesDir().getParent()).append(DATABASE_PATH).toString();
-			Locale[] locales = Locale.getAvailableLocales();
-			for(Locale locale : locales) {
-				String localeName = locale.toString();
-				String path = pathPattern.replace("*", localeName);
-				File f = new File(path);
-				if(f.exists()) {
-					mDatabases.put(localeName, path);
+			// Find all available databases.
+			File[] dbs = null;
+			try {
+				String dir = new StringBuilder(c.getFilesDir().getParent())
+						.append('/').append(DATABASE_DIR).toString();
+				dbs = new File(dir).listFiles(new DatabaseFilter());
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+
+			if(dbs != null) {
+				for(File db : dbs) {
+					String name = db.getName();
+					String locale = name.substring(name.indexOf('_') + 1, name.lastIndexOf('.'));
+					mDatabases.put(locale, db.getAbsolutePath());
 				}
 			}
 		}

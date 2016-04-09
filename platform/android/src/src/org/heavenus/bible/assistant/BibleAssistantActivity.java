@@ -29,47 +29,49 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class BibleAssistantActivity extends BaseActivity {
+public class BibleAssistantActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 	private class BookCategory {
 		public String title;
 		public Uri uri;
 	}
-	
+
+	private List<BookCategory> mCats;
+	private ListView mCatListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.main);
+        mCatListView = (ListView) findViewById(R.id.category_list);
         
-        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root_layout);
-        
-        // Fill in all book categories.
-        List<BookCategory> cats = getBookCategories(this);
-        if(cats != null) {
-        	LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-        			LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        	for(final BookCategory cat : cats) {
-        		Button btn = new Button(this);
-        		btn.setText(cat.title);
-        		btn.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// Show books in specific category.
-						Intent it = new Intent(Intent.ACTION_VIEW, cat.uri,
-								BibleAssistantActivity.this, BookListActivity.class);
-						it.putExtra(BookListActivity.EXTRA_CATEGORY_TITLE, cat.title);
-						startActivity(it);
-					}
-				});
-
-        		rootLayout.addView(btn, lp);
+        // Get all book categories.
+        mCats = getBookCategories(this);
+        if(mCats != null) {
+        	List<String> titles = new ArrayList<String>();
+        	for(BookCategory cat : mCats) {
+        		titles.add(cat.title);
         	}
+        	mCatListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles));
+
+        	mCatListView.setOnItemClickListener(this);
         }
     }
-    
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		BookCategory cat = mCats.get(position);
+
+		// Show books in specific category.
+		Intent it = new Intent(Intent.ACTION_VIEW, cat.uri, this, BookListActivity.class);
+		it.putExtra(BookListActivity.EXTRA_CATEGORY_TITLE, cat.title);
+		startActivity(it);
+	}
+
     private List<BookCategory> getBookCategories(Context c) {
     	List<BookCategory> cats = new ArrayList<BookCategory>();
     	
