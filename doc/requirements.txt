@@ -52,6 +52,7 @@ BibleAssistant v0.1.8
 
 BibleAssistant v0.1.9
 ---------------------
+* add chapter indication when fast scrolling.
 * support word searching.
 
 

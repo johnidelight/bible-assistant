@@ -283,8 +283,8 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 			View view = null;
 			
 			// Format sections content using different layouts.
+			// TODO: reuse convertView.
 			Section s = ensureSection(position);
-			CharSequence text = getSectionContentInBookMode(s);
 			if(s.isMainTitle) {
 				view = View.inflate(mContext, R.layout.section_main_title, null);
 			} else if(s.isChapterTitle) {
@@ -297,6 +297,7 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 			
 			TextView tv = (TextView) view.findViewById(android.R.id.text1);
 			if(tv != null) {
+				CharSequence text = getSectionContentInBookMode(s);
 				tv.setText(text);
 
 				// Show indicator for sections with comments.
