@@ -33,7 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class BibleAssistantActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class BookCategoryActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 	private class BookCategory {
 		public String title;
 		public Uri uri;
@@ -46,7 +46,7 @@ public class BibleAssistantActivity extends BaseActivity implements AdapterView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.main);
+        setContentView(R.layout.book_category);
         mCatListView = (ListView) findViewById(R.id.category_list);
         
         // Get all book categories.
@@ -75,7 +75,7 @@ public class BibleAssistantActivity extends BaseActivity implements AdapterView.
     private List<BookCategory> getBookCategories(Context c) {
     	List<BookCategory> cats = new ArrayList<BookCategory>();
     	
-    	// FIXME: hardcode locale, need use current system locale.
+    	// FIXME: hard-coded locale, need use current system locale.
     	Uri uri = Uri.withAppendedPath(BibleStore.BIBLE_CONTENT_URI, Locale.SIMPLIFIED_CHINESE.toString());
     	String[] projection = new String[]{BibleStore.CategoryColumns._ID, BibleStore.CategoryColumns.TITLE};
     	Cursor cursor = c.getContentResolver().query(uri, projection, null, null, null);

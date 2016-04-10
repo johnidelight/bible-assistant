@@ -25,7 +25,7 @@
 
     <application android:icon="@drawable/bookmark1" android:label="@string/app_name" android:allowBackup="false">
 
-        <activity android:name=".BibleAssistantActivity" android:label="@string/app_name">
+        <activity android:name=".BookCategoryActivity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
