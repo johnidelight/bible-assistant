@@ -35,37 +35,48 @@ BibleAssistant v0.1.5
 
 BibleAssistant v0.1.6
 ---------------------
-* add context menu for every section words: copy; comments; etc.
+* add context menu for every section words: Copy; Comments.
 * support short book title.
 
 
 BibleAssistant v0.1.7
 ---------------------
-* support word searching.
+* fix black screen issue in recent devices;
 
 
 BibleAssistant v0.1.8
+---------------------
+* add context menu for every section words: Share.
+* fix list view scrolling flicker issue in recent devices;
+
+
+BibleAssistant v0.1.9
+---------------------
+* support word searching.
+
+
+BibleAssistant v0.1.10
 ---------------------
 * chapter manager: view all chapters.
 * bookmark manager: view all bookmarks;
 
 
-BibleAssistant v0.1.9
+BibleAssistant v0.1.11
 ---------------------
 * review bible content(Chinese Simplied version), correct content errors.
 
 
-BibleAssistant v0.1.10
+BibleAssistant v0.1.12
 ---------------------
 * add app widget: Random Word.
 
 
-BibleAssistant v0.1.11
+BibleAssistant v0.1.13
 ---------------------
 * add app widget: Daily Word
 
 
-BibleAssistant v0.1.12
+BibleAssistant v0.1.14
 ---------------------
 * support voice reading section words.
 
