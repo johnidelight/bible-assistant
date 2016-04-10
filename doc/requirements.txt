@@ -41,48 +41,70 @@ BibleAssistant v0.1.6
 
 BibleAssistant v0.1.7
 ---------------------
-* fix black screen issue in recent devices;
+* fix black screen issue in recent devices.
 
 
 BibleAssistant v0.1.8
 ---------------------
 * add context menu for every section words: Share.
-* fix list view scrolling flicker issue in recent devices;
+* fix list view scrolling flicker issue in recent devices.
 
 
-BibleAssistant v0.1.9
+BibleAssistant v0.2.0
 ---------------------
+* use action bar for menus, enable system menu.
 * add chapter indication when fast scrolling.
-* support word searching.
+* add action item to select chapter.
+* upgrade icons.
 
 
-BibleAssistant v0.1.10
+BibleAssistant v0.2.1
 ---------------------
-* chapter manager: view all chapters.
-* bookmark manager: view all bookmarks;
+* add section menu item: Favorite.
+* add action item to manage bookmarks: favorites, comments.
+* bookmark management: view all bookmarks, remove bookmark.
 
 
-BibleAssistant v0.1.11
+BibleAssistant v0.2.2
+---------------------
+* add action item to search words.
+* support word searching in all layers: categories, books, book.
+* save/delete searching history.
+
+
+BibleAssistant v0.2.3
+---------------------
+* support voice reading content.
+
+
+BibleAssistant v0.2.4
 ---------------------
 * review bible content(Chinese Simplied version), correct content errors.
 
 
-BibleAssistant v0.1.12
+BibleAssistant v0.3.0
 ---------------------
-* add app widget: Random Word.
+* add app widget: Random Words.
 
 
-BibleAssistant v0.1.13
+BibleAssistant v0.3.1
 ---------------------
-* add app widget: Daily Word
+* add app widget: Daily Words.
 
 
-BibleAssistant v0.1.14
+BibleAssistant v0.4.0
 ---------------------
-* support voice reading section words.
+* create iOS version.
 
 
-More future versions:
-* add more Bible language content: English, etc.
+BibleAssistant v0.5.0
+---------------------
+* add Chinese Traditional content database.
 * supply settings for language switching.
+* default use current locale.
+
+
+BibleAssistant v0.6.0
+---------------------
+* add English content database.
 
