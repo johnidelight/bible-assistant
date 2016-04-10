@@ -22,7 +22,8 @@
     
     <string name="setting">Settings</string>
     <string name="about">About</string>
-    
+
+    <string name="share">Share</string>
     <string name="copy">Copy</string>
     <string name="add_comments">Comments</string>
     

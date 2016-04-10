@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/copy"
+    <item android:id="@+id/share"
     	android:icon="@android:drawable/ic_menu_share"
+		android:title="@string/share"
+		/>
+
+    <item android:id="@+id/copy"
+    	android:icon="@android:drawable/ic_menu_save"
 		android:title="@string/copy"
 		/>
 		

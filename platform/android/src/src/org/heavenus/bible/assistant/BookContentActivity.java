@@ -133,6 +133,9 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 	public boolean onContextItemSelected(MenuItem item) {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    switch(item.getItemId()) {
+	    	case R.id.share:
+	    		shareSectionContent(info.position);
+	    		return true;
 	        case R.id.copy:
 	        	copySectionContent(info.position);
 	            return true;
@@ -168,6 +171,17 @@ public class BookContentActivity extends BaseActivity implements ListView.OnItem
 		it.putExtra(CommentActivity.EXTRA_BOOK_TITLE, mBookTitle);
 		it.putExtra(CommentActivity.EXTRA_SECTION_CONTENT, sectionText);
 		startActivity(it);
+	}
+
+	private void shareSectionContent(int sectionPosition) {
+		Section s = (Section)mSectionAdapter.getItem(sectionPosition);
+		String content = getSectionContentInShareMode(s);
+
+		Intent it = new Intent();
+		it.setAction(Intent.ACTION_SEND);
+		it.putExtra(Intent.EXTRA_TEXT, content);
+		it.setType("text/plain");
+		startActivity(Intent.createChooser(it, getText(R.string.share)));
 	}
 	
 	private void copySectionContent(int sectionPosition) {
