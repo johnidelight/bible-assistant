@@ -50,12 +50,16 @@ BibleAssistant v0.1.8
 * fix list view scrolling flicker issue in recent devices.
 
 
+BibleAssistant v0.1.9
+---------------------
+* upgrade app icons.
+
+
 BibleAssistant v0.2.0
 ---------------------
 * use action bar for menus, enable system menu.
 * add chapter indication when fast scrolling.
 * add action item to select chapter.
-* upgrade icons.
 
 
 BibleAssistant v0.2.1
